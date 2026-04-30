@@ -7,8 +7,8 @@ class CreateBorrowings < ActiveRecord::Migration[8.1]
       t.datetime :due_date
       t.datetime :return_date
       t.integer :status
-      t.float :fine_amount
-      t.boolean :fine_paid
+      t.float :fine_amount, default: 0
+      t.boolean :fine_paid, default: false
 
       t.timestamps
     end
