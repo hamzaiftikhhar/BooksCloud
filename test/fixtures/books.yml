@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  isbn: MyString
+  genre: MyString
+  description: MyText
+  total_copy_count: 1
+  available_copy_count: 1
+  publication_date: 2026-04-30
+  author: one
+
+two:
+  title: MyString
+  isbn: MyString
+  genre: MyString
+  description: MyText
+  total_copy_count: 1
+  available_copy_count: 1
+  publication_date: 2026-04-30
+  author: two

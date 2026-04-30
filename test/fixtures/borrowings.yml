@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  member: one
+  book: one
+  issue_date: 2026-04-30 20:35:00
+  due_date: 2026-04-30 20:35:00
+  return_date: 2026-04-30 20:35:00
+  status: 1
+  fine_amount: 1.5
+  fine_paid: false
+
+two:
+  member: two
+  book: two
+  issue_date: 2026-04-30 20:35:00
+  due_date: 2026-04-30 20:35:00
+  return_date: 2026-04-30 20:35:00
+  status: 1
+  fine_amount: 1.5
+  fine_paid: false
