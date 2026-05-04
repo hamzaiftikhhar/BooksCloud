@@ -41,7 +41,7 @@ books = [
   {
     author: author_map[0],
     title: "Norwegian Wood",
-    isbn: "978-0-06-085052-4",
+    isbn: "9780060850524",
     genre: "Fiction",
     description: "A nostalgic novel about love and loss",
     publication_date: Date.new(1987, 9, 4),
@@ -51,7 +51,7 @@ books = [
   {
     author: author_map[1],
     title: "The Handmaid's Tale",
-    isbn: "978-0-385-49081-8",
+    isbn: "9780385490818",
     genre: "Dystopian Fiction",
     description: "A dystopian novel about a totalitarian regime",
     publication_date: Date.new(1985, 6, 20),
@@ -61,7 +61,7 @@ books = [
   {
     author: author_map[2],
     title: "1984",
-    isbn: "978-0-451-52494-2",
+    isbn: "9780451524942",
     genre: "Science Fiction",
     description: "A political allegory about totalitarianism",
     publication_date: Date.new(1949, 6, 8),
@@ -71,7 +71,7 @@ books = [
   {
     author: author_map[3],
     title: "Pride and Prejudice",
-    isbn: "978-0-14-143951-8",
+    isbn: "9780141439518",
     genre: "Romance",
     description: "A classic romance novel about Elizabeth Bennet",
     publication_date: Date.new(1813, 1, 28),
@@ -81,7 +81,7 @@ books = [
   {
     author: author_map[4],
     title: "The Alchemist",
-    isbn: "978-0-06-112537-1",
+    isbn: "9780061125371",
     genre: "Fiction",
     description: "A philosophical novel about following your dreams",
     publication_date: Date.new(1988, 1, 1),
