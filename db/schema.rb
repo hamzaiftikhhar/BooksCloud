@@ -92,3 +92,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_04_065326) do
   add_foreign_key "borrowings", "members"
   add_foreign_key "fines", "borrowings"
 end
+
+
+#what is my database Name? The database name is not specified in the schema.rb file. The database name is typically defined in the config/database.yml file of a Rails application. You can check that file to find out the name of your database.
