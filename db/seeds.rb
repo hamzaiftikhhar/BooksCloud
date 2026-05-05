@@ -1,161 +1,112 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-
-# Clear existing data
+# Clear existing data (safe reset for dev)
 [ User, Book, Author, Member, Borrowing, Fine ].each(&:delete_all)
 
 puts "Seeding database..."
 
-# Create Users
-admin_user = User.create!(
+# ================= USERS =================
+User.create!(
   email: 'admin@library.com',
   password: 'password123',
   password_confirmation: 'password123',
-  role: 'admin'
+  role: 0
 )
 
-librarian_user = User.create!(
+User.create!(
   email: 'librarian@library.com',
   password: 'password123',
   password_confirmation: 'password123',
-  role: 'librarian'
+  role: 1
 )
 
-puts "Created 2 users (1 admin, 1 librarian)"
+puts "Users created"
 
-# Create Authors
-authors = [
-  { first_name: "Haruki", last_name: "Murakami" },
-  { first_name: "Margaret", last_name: "Atwood" },
-  { first_name: "George", last_name: "Orwell" },
-  { first_name: "Jane", last_name: "Austen" },
-  { first_name: "Paulo", last_name: "Coelho" }
+# ================= AUTHORS =================
+authors_data = [
+  [ "Alix", "E. Harrow" ],
+  [ "Carissa", "Broadbent" ],
+  [ "Charlaine", "Harris" ],
+  [ "Christopher", "Paolini" ],
+  [ "Leigh", "Bardugo" ],
+  [ "Mark", "Lawrence" ],
+  [ "Marlon", "James" ],
+  [ "Neil", "Gaiman" ],
+  [ "R.F.", "Kuang" ],
+  [ "Rebecca", "Yarros" ],
+  [ "Samantha", "Shannon" ],
+  [ "Shannon", "Chakraborty" ],
+  [ "Stephen", "King" ],
+  [ "Terry", "Pratchett" ],
+  [ "J.R.R.", "Tolkien" ],
+  [ "T.H.", "White" ]
 ]
 
-author_map = authors.map { |attrs| Author.create!(attrs) }
-puts "Created #{author_map.length} authors"
+authors = authors_data.map do |first, last|
+  Author.create!(first_name: first, last_name: last)
+end
 
-# Create Books
-books = [
-  {
-    author: author_map[0],
-    title: "Norwegian Wood",
-    isbn: "9780060850524",
-    genre: "Fiction",
-    description: "A nostalgic novel about love and loss",
-    publication_date: Date.new(1987, 9, 4),
-    total_copy_count: 5,
-    available_copy_count: 5
-  },
-  {
-    author: author_map[1],
-    title: "The Handmaid's Tale",
-    isbn: "9780385490818",
-    genre: "Dystopian Fiction",
-    description: "A dystopian novel about a totalitarian regime",
-    publication_date: Date.new(1985, 6, 20),
-    total_copy_count: 4,
-    available_copy_count: 4
-  },
-  {
-    author: author_map[2],
-    title: "1984",
-    isbn: "9780451524942",
-    genre: "Science Fiction",
-    description: "A political allegory about totalitarianism",
-    publication_date: Date.new(1949, 6, 8),
-    total_copy_count: 6,
-    available_copy_count: 6
-  },
-  {
-    author: author_map[3],
-    title: "Pride and Prejudice",
-    isbn: "9780141439518",
-    genre: "Romance",
-    description: "A classic romance novel about Elizabeth Bennet",
-    publication_date: Date.new(1813, 1, 28),
-    total_copy_count: 3,
-    available_copy_count: 3
-  },
-  {
-    author: author_map[4],
-    title: "The Alchemist",
-    isbn: "9780061125371",
-    genre: "Fiction",
-    description: "A philosophical novel about following your dreams",
-    publication_date: Date.new(1988, 1, 1),
-    total_copy_count: 7,
-    available_copy_count: 7
-  }
+author_hash = authors.index_by { |a| "#{a.first_name} #{a.last_name}" }
+
+puts "Authors created"
+
+# ================= BOOKS =================
+books_data = [
+  [ "Alix E. Harrow", "The Once and Future Witches", "9780316421999", :fantasy ],
+  [ "Carissa Broadbent", "The Serpent and the Wings of Night", "9781957779004", :fantasy ],
+  [ "Charlaine Harris", "Dead Until Dark", "9780441008537", :fantasy ],
+  [ "Christopher Paolini", "Eragon", "9780375826696", :fantasy ],
+  [ "Leigh Bardugo", "Ninth House", "9781250313072", :fantasy ],
+  [ "Mark Lawrence", "The Book That Wouldn't Burn", "9780593437919", :fantasy ],
+  [ "Marlon James", "Black Leopard, Red Wolf", "9780735220173", :fantasy ],
+  [ "Neil Gaiman", "American Gods", "9780062572233", :fantasy ],
+  [ "R.F. Kuang", "The Burning God", "9780062662637", :fantasy ],
+  [ "Rebecca Yarros", "Fourth Wing", "9781649374042", :fantasy ],
+  [ "Samantha Shannon", "The Priory of the Orange Tree", "9781635570281", :fantasy ],
+  [ "Shannon Chakraborty", "The Adventures of Amina al-Sirafi", "9780062963499", :fantasy ],
+  [ "Stephen King", "The Gunslinger", "9781501143511", :fantasy ],
+  [ "Terry Pratchett", "Night Watch", "9780061020643", :fantasy ],
+  [ "J.R.R. Tolkien", "The Hobbit", "9780547928227", :fantasy ],
+  [ "T.H. White", "The Once and Future King", "9780441627400", :fantasy ]
 ]
 
-book_map = books.map { |attrs| Book.create!(attrs) }
-puts "Created #{book_map.length} books"
+books_data.each do |author_name, title, isbn, genre|
+  total = rand(3..10)
+  available = rand(0..total)   # ✅ ALWAYS SAFE
 
-# Create Members
-members = [
-  {
-    name: "Ahmed Ali",
-    email: "ahmed@example.com",
-    phone: "03001234567",
-    status: "active",
-    max_books_allowed: 3
-  },
-  {
-    name: "Fatima Khan",
-    email: "fatima@example.com",
-    phone: "03009876543",
-    status: "active",
-    max_books_allowed: 3
-  },
-  {
-    name: "Hassan Mohammed",
-    email: "hassan@example.com",
-    phone: "03005555555",
-    status: "suspended",
-    max_books_allowed: 3
-  },
-  {
-    name: "Ayesha Malik",
-    email: "ayesha@example.com",
-    phone: "03003333333",
-    status: "active",
-    max_books_allowed: 2
-  }
-]
+  Book.create!(
+    author: author_hash[author_name],
+    title: title,
+    isbn: isbn,
+    genre: Book.genres[genre],
+    description: "#{title} is a compelling fantasy novel filled with adventure, magic, and deep storytelling.",
+    publication_date: Date.new(rand(1950..2023), rand(1..12), rand(1..28)),
+    total_copy_count: total,
+    available_copy_count: available
+  )
+end
 
-member_map = members.map { |attrs| Member.create!(attrs) }
-puts "Created #{member_map.length} members"
+puts "Books created"
 
-# Create sample borrowings
-borrowing1 = Borrowing.create!(
-  member: member_map[0],
-  book: book_map[0],
-  status: "active",
-  due_date: Date.current + 14.days
+# ================= MEMBERS =================
+Member.create!([
+  { name: "Ahmed Ali", email: "ahmed@example.com", phone: "03001234567", status: 0, max_books_allowed: 3 },
+  { name: "Fatima Khan", email: "fatima@example.com", phone: "03009876543", status: 0, max_books_allowed: 3 },
+  { name: "Hassan Ahmed", email: "hassan@example.com", phone: "03005555555", status: 1, max_books_allowed: 2 }
+])
+
+puts "Members created"
+
+# ================= BORROWINGS =================
+book = Book.first
+member = Member.first
+
+Borrowing.create!(
+  book: book,
+  member: member,
+  status: 0,
+  issue_date: Date.today,
+  due_date: Date.today + 14.days
 )
 
-# Overdue borrowing
-overdue_borrowing = Borrowing.create!(
-  member: member_map[1],
-  book: book_map[1],
-  status: "active",
-  due_date: Date.current - 5.days
-)
+puts "Borrowing created"
 
-# Create fine for overdue borrowing
-Fine.create!(
-  borrowing: overdue_borrowing,
-  amount_due: 50,
-  status: "outstanding"
-)
-
-puts "Created 2 borrowings and 1 fine"
-
-puts "\n✓ Database seeding completed!"
-puts "\nDemo Credentials:"
-puts "Admin Email: admin@library.com"
-puts "Admin Password: password123"
-puts "\nLibrarian Email: librarian@library.com"
-puts "Librarian Password: password123"
+puts "\n✅ Seeding complete!"

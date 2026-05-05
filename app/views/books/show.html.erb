@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <%= link_to "Back to Books", books_path, class: "btn btn-secondary mb-3" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <% if @book.cover.attached? %>
+            <div class="text-center mb-3">
+              <%= image_tag @book.cover, class: "img-fluid rounded" %>
+            </div>
+          <% end %>
+
+          <% cache @book do %>
+            <h1 class="card-title"><%= @book.title %></h1>
+            <p class="card-text"><%= @book.description.to_plain_text %></p>
+            <p class="card-text"><strong>Genre:</strong> <%= @book.genre %></p>
+            <p class="card-text"><strong>ISBN:</strong> <%= @book.isbn %></p>
+            <p class="card-text"><strong>Published on:</strong> <%= @book
+              .publication_date
+              .strftime("%B %d, %Y") %></p>
+          <% end %>
+
+          <%= render "inventory", book: @book %>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="col-md-4">
+      <% if user_signed_in? %>
+        <div class="card">
+          <div class="card-header">
+            <h5>Admin Actions</h5>
+          </div>
+          <div class="card-body">
+            <%= link_to "Edit Book", [:edit, @book], class: "btn btn-primary w-100 mb-2" %>
+            <%= button_to "Delete Book", @book, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger w-100" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
