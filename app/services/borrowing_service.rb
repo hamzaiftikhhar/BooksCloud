@@ -1,13 +1,13 @@
-  class BorrowingService
-    def initialize(member:, book:)
-      @member = member
-      @book = book
-    end
+class BorrowingService
+  def initialize(member:, book:)
+    @member = member
+    @book = book
+  end
 
-    def execute
-      validate_borrowing
-      create_borrowing
-    end
+  def execute
+    validate_borrowing
+    create_borrowing
+  end
 
     private
 
@@ -23,11 +23,13 @@
         borrowing = Borrowing.create!(
           member: @member,
           book: @book,
-          status: :active
+          status: :active,
+          issue_date: Date.current,
+          due_date: Date.current + LibraryConstants::LOAN_PERIOD_DAYS.days
         )
 
         @book.decrease_available_copy_count
         borrowing
       end
     end
-  end
+end

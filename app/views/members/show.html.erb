@@ -50,25 +50,6 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header"><h5 class="mb-0">Issue a book</h5></div>
-      <div class="card-body">
-        <% if @available_books.any? %>
-          <%= form_with url: borrowings_path, local: true do |form| %>
-            <%= hidden_field_tag :member_id, @member.id %>
-            <div class="mb-3">
-              <%= form.label :book_id, "Select Book" %>
-              <%= form.collection_select :book_id, @available_books, :id, :title, { prompt: "Choose a book" }, class: "form-select" %>
-            </div>
-            <div class="d-grid">
-              <%= form.submit "Issue Book", class: "btn btn-primary" %>
-            </div>
-          <% end %>
-        <% else %>
-          <p class="text-muted mb-0">No books are currently available to issue.</p>
-        <% end %>
-      </div>
-    </div>
   </div>
 
   <div class="col-lg-7">

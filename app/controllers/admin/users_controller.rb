@@ -27,10 +27,11 @@ module Admin
     end
 
     def change_role
-      @user.update!(role: params.require(:user).permit(:role)[:role])
+      @user.update!(role: params.require(:role))
 
       redirect_to admin_user_path(@user), notice: "Staff role updated successfully."
     end
+
 
     private
 

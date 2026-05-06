@@ -14,7 +14,7 @@
         <tr>
           <th>Book</th>
           <th>Member</th>
-          <th>Status</th>
+          <th>Borrowing Status</th>
           <th>Due date</th>
           <th>Returned</th>
           <th></th>
@@ -25,7 +25,7 @@
           <tr>
             <td><%= link_to borrowing.book.title, borrowing_path(borrowing), class: "text-decoration-none" %></td>
             <td><%= link_to borrowing.member.name, member_path(borrowing.member), class: "text-decoration-none" %></td>
-            <td><span class="badge bg-<%= borrowing.active? ? "success" : "secondary" %>"><%= borrowing.status.humanize %></span></td>
+            <td><span class="badge justify-content-center align-items-center bg-<%= borrowing.active? ? "success" : "secondary" %>"><%= borrowing.status.humanize %></span></td>
             <td><%= borrowing.due_date&.strftime("%b %d, %Y") %></td>
             <td><%= borrowing.return_date&.strftime("%b %d, %Y") || "—" %></td>
             <td><%= link_to "View", borrowing_path(borrowing), class: "btn btn-outline-primary btn-sm" %></td>

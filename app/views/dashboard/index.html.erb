@@ -137,33 +137,3 @@
     </div>
   </div>
 </div>
-#there are two major issues , while issuing the book I got this error -> uninitialized constant BorrowingsController::Services
-#second error is when click the dashboard i got this error  @top_borrowed_books = MostBorrowedBooksQuery.call(5)
-  thissi hte most error i got everytime   @most_borrowed_books = MostBorrowedBooksQuery.call(10)
-
-  also give me the guide how can i work as an admina also i have seen that when i 
-
-  also when i cahnge the role of the member to the admin this is the error thta i got 
-        @user.update!(role: params.require(:user).permit(:role)[:role])
-
-        ActionController::ParameterMissing in Admin::UsersController#change_role
-param is missing or the value is empty: user
-
-
-When i try to edit the description of the book this is the error that i got
-<!-- BEGIN app/views/layouts/action_text/contents/_content.html.erb
---><div class="trix-content">
-  <!-- BEGIN /Users/apple/.rvm/gems/ruby-3.4.8/gems/actiontext-8.1.3/app/views/action_text/contents/_content.html.erb
--->This is hte end book
-<!-- END /Users/apple/.rvm/gems/ruby-3.4.8/gems/actiontext-8.1.3/app/views/action_text/contents/_content.html.erb --></div>
-<!-- END app/views/layouts/action_text/contents/_content.html.erb -->
-
-
-also add the validation that the ISBN must follow the format Length: 13 digits (starts with 978 or 979) or 10 digits.Hyphens/Spaces: Do not enter hyphens or spaces.Characters: All digits should be 0–9.The "X" Check Digit (ISBN-10 only): If a 10-digit ISBN ends with the letter 'X', enter it as an uppercase 'X'. Note: ISBN-13 does not use 'X'.ExamplesCorrect (ISBN-13): 9783161484100 (instead of 978-3-16-148410-0)Correct (ISBN-10): 030640615X (instead of 0-306-40615-X)Key DifferencesFeatureISBN-13 (Modern)ISBN-10 (Pre-2007)Length13 Digits10 DigitsStart978 or 979Variable (0, 1, 2, etc.)Final CharNumeric (0-9)Numeric (0-9) or 'X'
-
-
-Also hte published data cannot be in the future. It must be a valid date in the past or present.
-
-also i want to give a beautiful design to the dashboard page and show the image of the book cover if any 
-
-also the 

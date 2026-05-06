@@ -1,8 +1,7 @@
-module Services
-  class FineCalculationService
-    def self.call(borrowing:)
-      new(borrowing: borrowing).execute
-    end
+class FineCalculationService
+  def self.call(borrowing:)
+    new(borrowing: borrowing).execute
+  end
 
     def initialize(borrowing:)
       @borrowing = borrowing
@@ -17,5 +16,4 @@ module Services
 
       overdue_days * LibraryConstants::FINE_RATE_PER_DAY
     end
-  end
 end

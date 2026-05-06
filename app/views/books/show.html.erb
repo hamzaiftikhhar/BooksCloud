@@ -49,23 +49,19 @@
       <div class="card mb-4">
         <div class="card-header"><h5 class="mb-0">Issue this book</h5></div>
         <div class="card-body">
-          <% if @members.any? %>
-            <%= form_with url: borrowings_path, local: true do |form| %>
+          <%= turbo_frame_tag "member_check" do %>
+            <%= form_with url: search_member_borrowings_path, method: :get, local: false, data: { turbo_frame: "member_check" } do |f| %>
               <%= hidden_field_tag :book_id, @book.id %>
               <div class="mb-3">
-                <%= form.label :membership_number, "Enter Membership Number" %>
-                <%= form.text_field :membership_number, class: "form-control" %>
+                <%= f.label :membership_number, "Search Member by ID" %>
+                <%= f.text_field :membership_number, placeholder: "Enter membership number", class: "form-control" %>
               </div>
-              <div class="d-grid">
-                
-                <%= form.submit "Fetch Member Details", class: "btn btn-primary", data: { turbo_confirm: "Issue this book to the selected member?" }  %>
-              </div>
+              <%= f.submit "Search & Verify Member", class: "btn btn-outline-primary w-100" %>
             <% end %>
-          <% else %>
-            <p class="text-muted mb-0">No active members are available to issue this book.</p>
           <% end %>
         </div>
       </div>
+
 
       <div class="card">
         <div class="card-header"><h5 class="mb-0">Quick info</h5></div>

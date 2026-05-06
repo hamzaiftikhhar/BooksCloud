@@ -1,6 +1,7 @@
 class BorrowingsController < ApplicationController
   before_action :set_borrowing, only: %i[show return_book]
 
+
   def index
     @borrowings = policy_scope(Borrowing).includes(:member, :book).order(created_at: :desc).page(params[:page]).per(10)
   end
@@ -14,7 +15,7 @@ class BorrowingsController < ApplicationController
 
     book = Book.find(params[:book_id])
 
-    borrowing = Services::BorrowingService.new(member: member, book: book).execute # what this line is doing? t
+    borrowing = BorrowingService.new(member: member, book: book).execute
 
     redirect_to borrowing, notice: "Book issued successfully."
 
@@ -22,9 +23,20 @@ class BorrowingsController < ApplicationController
     redirect_back fallback_location: borrowings_path, alert: e.message
   end
 
+  def search_member
+    @member = Member.find_by(membership_number: params[:membership_number])
+    @book = Book.find(params[:book_id])
+
+    respond_to do |format|
+      format.html { render partial: "member_details", locals: { member: @member, book: @book } }
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace("member_check", partial: "member_details", locals: { member: @member, book: @book })
+      end
+    end
+  end
 
   def return_book
-    Services::ReturnService.new(borrowing: @borrowing).execute
+    ReturnService.new(borrowing: @borrowing).execute
     redirect_to @borrowing, notice: "Book return recorded successfully."
   rescue StandardError => e
     redirect_to @borrowing, alert: e.message

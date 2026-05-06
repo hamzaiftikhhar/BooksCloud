@@ -1,14 +1,13 @@
-module Services
-  class ReturnService
-    def initialize(borrowing:)
-      @borrowing = borrowing
-      @return_date = Date.current
-    end
+class ReturnService
+  def initialize(borrowing:)
+    @borrowing = borrowing
+    @return_date = Date.current
+  end
 
-    def execute
-      validate_return
-      process_return
-    end
+  def execute
+    validate_return
+    process_return
+  end
 
     private
 
@@ -28,7 +27,7 @@ module Services
     end
 
     def create_fine
-      fine_amount = Services::FineCalculationService.call(borrowing: @borrowing)
+      fine_amount = FineCalculationService.call(borrowing: @borrowing)
 
       return if fine_amount.zero?
 
@@ -38,5 +37,4 @@ module Services
         status: :outstanding
       )
     end
-  end
 end

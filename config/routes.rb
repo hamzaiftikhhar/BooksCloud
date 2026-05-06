@@ -23,10 +23,12 @@ Rails.application.routes.draw do
   resources :borrowings, only: [ :index, :show, :create ] do
     member do
       post :return_book
+      patch :return_book
     end
     collection do
       get :active
       get :overdue
+      get :search_member
     end
   end
 
@@ -59,6 +61,18 @@ Rails.application.routes.draw do
       end
     end
   end
+  # # config/routes.rb
+
+  # resources :borrowings do
+  #   collection do
+  #     get :search_member  # This creates search_member_borrowings_path
+  #   end
+
+  #   member do
+  #     patch :return_book
+  #   end
+  # end
+
 
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check # why this route is needed? it is used for monitoring the health of the application. It provides a simple endpoint that can be pinged by monitoring tools to check if the application is running and responsive. This can help detect issues early and ensure that the application is available to users.

@@ -1,4 +1,3 @@
-module Queries
   class MonthlyBorrowingCountQuery
     def self.call(year = Date.current.year)
       new.execute(year)
@@ -23,4 +22,3 @@ module Queries
       result
     end
   end
-end
