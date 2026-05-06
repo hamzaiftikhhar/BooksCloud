@@ -1,0 +1,53 @@
+<% content_for :title, "Staff user" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-column flex-md-row">
+  <div>
+    <h1 class="mb-0"><%= @user.email %></h1>
+    <p class="text-muted mb-0">Staff account details and role management.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <%= link_to "Back to staff", admin_users_path, class: "btn btn-outline-secondary" %>
+    <%= button_to "Delete user", admin_user_path(@user), method: :delete, data: { turbo_confirm: "Remove this staff user?" }, class: "btn btn-danger" %>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <dl class="row">
+      <dt class="col-sm-4">Email</dt>
+      <dd class="col-sm-8"><%= @user.email %></dd>
+
+      <dt class="col-sm-4">Role</dt>
+      <dd class="col-sm-8"><%= @user.role.humanize %></dd>
+
+      <dt class="col-sm-4">Created</dt>
+      <dd class="col-sm-8"><%= @user.created_at.strftime("%b %d, %Y") %></dd>
+    </dl>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header"><h5 class="mb-0">Change role</h5></div>
+  <div class="card-body">
+
+    <%# #Form TypeParams Structureform_with model:user: { role: ... } ✅form_with url:role: ... ❌
+#The difference between the two approaches lies in how the form is structured and how it submits data to the server.
+#1. form_with model: @user, url: admin_user_path(@user), method: :patch do |form|
+#   - This approach uses the model object (@user) to build the form. It automatically generates form fields based on the attributes of the model and handles the submission to the specified URL (admin_user_path(@user)) with the PATCH method. This is a more conventional and Rails-like way to create a form for updating a resource, as it leverages the model's attributes and validations.
+#2. form_with url: change_role_admin_user_path(@user), method: :patch do |form|
+#   - This approach does not use the model object directly. Instead, it specifies a custom URL (change_role_admin_user_path(@user)) for the form submission. This can be useful             if you want to submit the form to a different action than the standard update action, or if you want to handle the form data in a custom way. However, it requires more manual setup for the form fields and does not automatically tie into the model's attributes.
+#In this context, since we are updating the role of a user, it would be more appropriate to use the first approach (form_with model: @user) as it is more straightforward and leverages the conventions of Rails forms. It also allows for easier handling of form data and validations related
+to the user model. The second approach could be used if there is a specific reason to handle the role change in a separate action, but generally, the first approach is more suitable for this scenario. %>
+    <%= form_with model: @user, url: change_role_admin_user_path(@user), method: :patch, local: true do |form| %>
+      <div class="mb-3">
+        <%= form.label :role %>
+        <%= form.select :role, User.roles.keys.map { |role| [role.humanize, role] }, {}, class: "form-select" %>
+      </div>
+      <div class="d-grid">
+        <%= form.submit "Update role", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+
+ 
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<% content_for :title, "Reports" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="mb-0">Reports</h1>
+    <p class="text-muted mb-0">View library analytics and overdue activity.</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Most borrowed books</h5>
+        <p class="card-text text-muted">Top-ten books by borrowing count.</p>
+        <%= link_to "View report", most_borrowed_books_reports_path, class: "stretched-link text-decoration-none" %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Overdue members</h5>
+        <p class="card-text text-muted">Members who currently have overdue loans.</p>
+        <%= link_to "View report", overdue_members_reports_path, class: "stretched-link text-decoration-none" %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Financial summary</h5>
+        <p class="card-text text-muted">Fines collected versus outstanding.</p>
+        <%= link_to "View report", financial_summary_reports_path, class: "stretched-link text-decoration-none" %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-xl-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">Monthly borrowing</h5>
+        <p class="card-text text-muted">Count of loans each month in the current year.</p>
+        <%= link_to "View report", monthly_borrowing_reports_path, class: "stretched-link text-decoration-none" %>
+      </div>
+    </div>
+  </div>
+</div>

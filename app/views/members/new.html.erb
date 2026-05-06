@@ -1,15 +1,17 @@
+<% content_for :title, "New Member" %>
+
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-md-8">
       <div class="card">
         <div class="card-header">
-          <h1 class="card-title mb-0">Edit Book</h1>
+          <h1 class="card-title mb-0">New Member</h1>
         </div>
         <div class="card-body">
-          <%= render "form", book: @book %>
+          <%= render "form" %>
         </div>
         <div class="card-footer">
-          <%= link_to "Cancel", @book, class: "btn btn-secondary" %>
+          <%= link_to "Cancel", members_path, class: "btn btn-secondary" %>
         </div>
       </div>
     </div>

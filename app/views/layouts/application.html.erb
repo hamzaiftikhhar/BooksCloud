@@ -36,14 +36,44 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
       <div class="container">
         <a class="navbar-brand" href="<%= root_path %>">Book Cloud</a>
-        <div class="d-flex gap-2 align-items-center">
-          <% if user_signed_in? %>
-            <span class="text-white me-3"><%= current_user.email %></span>
-            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-outline-light btn-sm" %> 
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <%= link_to "Dashboard", root_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Books", books_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Members", members_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Borrowings", borrowings_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Fines", fines_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Reports", reports_root_path, class: "nav-link" %>
+            </li>
+            <% if current_user&.admin? %>
+              <li class="nav-item">
+                <%= link_to "Admin", admin_root_path, class: "nav-link" %>
+              </li>
+            <% end %>
+          </ul>
+          <div class="d-flex gap-2 align-items-center">
+            <% if user_signed_in? %>
+              <span class="text-white me-3"><%= current_user.email %></span>
+              <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-outline-light btn-sm" %>
             <% else %>
-            <%= link_to "Login", new_user_session_path, class: "btn btn-outline-light btn-sm" %>
-            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary btn-sm" %>
-          <% end %>
+              <%= link_to "Login", new_user_session_path, class: "btn btn-outline-light btn-sm" %>
+              <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary btn-sm" %>
+            <% end %>
+          </div>
         </div>
       </div>
     </nav>
@@ -72,6 +102,15 @@
   document.addEventListener("DOMContentLoaded", function() {
     $('.select2').select2();
   });
+
+
+  document.addEventListener("turbo:load", function() {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+})
+
 </script>
   </body>
 </html>

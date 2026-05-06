@@ -1,0 +1,44 @@
+<% content_for :title, "Fines" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-column flex-md-row">
+  <div>
+    <h1 class="mb-0">Fines</h1>
+    <p class="text-muted mb-0">Review all outstanding and paid fines.</p>
+  </div>
+  <div class="btn-group" role="group" aria-label="Fine filters">
+    <%= link_to "All", fines_path, class: "btn btn-outline-secondary#{request.path == fines_path ? ' active' : ''}" %>
+    <%= link_to "Outstanding", outstanding_fines_path, class: "btn btn-outline-secondary#{request.path == outstanding_fines_path ? ' active' : ''}" %>
+    <%= link_to "Paid", paid_fines_path, class: "btn btn-outline-secondary#{request.path == paid_fines_path ? ' active' : ''}" %>
+  </div>
+</div>
+
+<% if @fines.any? %>
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Borrowing</th>
+          <th>Member</th>
+          <th>Status</th>
+          <th>Amount due</th>
+          <th>Paid</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @fines.each do |fine| %>
+          <tr>
+            <td><%= link_to fine.borrowing.book.title, borrowing_path(fine.borrowing), class: "text-decoration-none" %></td>
+            <td><%= link_to fine.member.name, member_path(fine.member), class: "text-decoration-none" %></td>
+            <td><span class="badge bg-<%= fine.outstanding? ? "warning" : "success" %>"><%= fine.status.humanize %></span></td>
+            <td>PKR <%= fine.amount_due %></td>
+            <td>PKR <%= fine.amount_paid || 0 %></td>
+            <td><%= link_to "View", fine_path(fine), class: "btn btn-outline-primary btn-sm" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">No fines found for the current filter.</p>
+<% end %>

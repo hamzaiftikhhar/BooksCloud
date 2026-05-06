@@ -1,5 +1,5 @@
 # Clear existing data (safe reset for dev)
-[ User, Book, Author, Member, Borrowing, Fine ].each(&:delete_all)
+[ Fine, Borrowing, Book, Author, Member, User ].each(&:delete_all)
 
 puts "Seeding database..."
 
@@ -8,14 +8,14 @@ User.create!(
   email: 'admin@library.com',
   password: 'password123',
   password_confirmation: 'password123',
-  role: 0
+  role: 1
 )
 
 User.create!(
   email: 'librarian@library.com',
   password: 'password123',
   password_confirmation: 'password123',
-  role: 1
+  role: 0
 )
 
 puts "Users created"
@@ -70,7 +70,7 @@ books_data = [
 
 books_data.each do |author_name, title, isbn, genre|
   total = rand(3..10)
-  available = rand(0..total)   # ✅ ALWAYS SAFE
+  available = rand(0..total)
 
   Book.create!(
     author: author_hash[author_name],
@@ -94,19 +94,5 @@ Member.create!([
 ])
 
 puts "Members created"
-
-# ================= BORROWINGS =================
-book = Book.first
-member = Member.first
-
-Borrowing.create!(
-  book: book,
-  member: member,
-  status: 0,
-  issue_date: Date.today,
-  due_date: Date.today + 14.days
-)
-
-puts "Borrowing created"
 
 puts "\n✅ Seeding complete!"

@@ -16,12 +16,16 @@ before_validation :generate_membership_number, on: :create
 before_validation :set_default_borrow_limit, on: :create
 before_validation :set_default_status, on: :create
 
-  # scope :active, -> { where(status: statuses[:active]) }
-  # scope :suspended, -> { where(status: statuses[:suspended]) }
-  # scope :expired, -> { where(status: statuses[:expired]) }
+  scope :active, -> { where(status: statuses[:active]) }
+  scope :suspended, -> { where(status: statuses[:suspended]) }
+  scope :expired, -> { where(status: statuses[:expired]) }
 
   def active_borrowings
     borrowings.active
+  end
+
+  def borrow_limit
+    max_books_allowed
   end
 
   def overdue_borrowings

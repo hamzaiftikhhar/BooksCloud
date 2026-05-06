@@ -1,4 +1,3 @@
-module Services
   class BorrowingService
     def initialize(member:, book:)
       @member = member
@@ -13,9 +12,9 @@ module Services
     private
 
     def validate_borrowing
-      # raise Borrowing::MemberSuspendedError if @member.suspended?
+      raise Borrowing::MemberSuspendedError if @member.suspended?
       raise Borrowing::MemberExpiredError if @member.expired?
-      raise Borrowing::BorrowLimitReachedError if @member.active_borrowings.count >= @member.borrow_limit
+      raise Borrowing::BorrowLimitReachedError if @member.active_borrowings.count >= @member.max_books_allowed
       raise Borrowing::NoAvailableCopiesError unless @book.copy_available?
     end
 
@@ -24,12 +23,11 @@ module Services
         borrowing = Borrowing.create!(
           member: @member,
           book: @book,
-          status: "active"
+          status: :active
         )
 
-        @book.decrease_available_copies
+        @book.decrease_available_copy_count
         borrowing
       end
     end
   end
-end

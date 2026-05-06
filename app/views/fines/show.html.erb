@@ -1,0 +1,37 @@
+<% content_for :title, "Fine details" %>
+
+<div class="d-flex justify-content-between align-items-start mb-4 gap-3 flex-column flex-md-row">
+  <div>
+    <h1 class="mb-1">Fine details</h1>
+    <p class="text-muted mb-0">Details for the fine associated with the borrowing.</p>
+  </div>
+  <%= link_to "Back to fines", fines_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <dl class="row">
+      <dt class="col-4">Member</dt>
+      <dd class="col-8"><%= link_to @fine.member.name, member_path(@fine.member), class: "text-decoration-none" %></dd>
+
+      <dt class="col-4">Book</dt>
+      <dd class="col-8"><%= link_to @fine.book.title, borrowing_path(@fine.borrowing), class: "text-decoration-none" %></dd>
+
+      <dt class="col-4">Status</dt>
+      <dd class="col-8"><span class="badge bg-<%= @fine.outstanding? ? "warning" : "success" %>"><%= @fine.status.humanize %></span></dd>
+
+      <dt class="col-4">Amount due</dt>
+      <dd class="col-8">PKR <%= @fine.amount_due %></dd>
+
+      <dt class="col-4">Amount paid</dt>
+      <dd class="col-8">PKR <%= @fine.amount_paid || 0 %></dd>
+
+      <dt class="col-4">Outstanding</dt>
+      <dd class="col-8">PKR <%= @fine.outstanding_amount %></dd>
+    </dl>
+
+    <% if @fine.outstanding? %>
+      <%= button_to "Mark as paid", mark_as_paid_fine_path(@fine), method: :post, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

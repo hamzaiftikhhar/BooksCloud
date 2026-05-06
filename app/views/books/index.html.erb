@@ -1,21 +1,30 @@
 <%= form_with url: search_books_path, method: :get, local: true, class: "mb-4" do |form| %>
-  <div class="input-group gap-2 flex-wrap ">
-
-    
-    <%= form.text_field :q, value: params[:q], placeholder: "Search by title or author", class: "form-control" %>
-    <%= form.select :genre, options_for_select(Book.distinct.pluck(:genre).compact, params[:genre]), include_blank: "All Genres", class: "form-select" %>
-    <%= form.select :availability, options_for_select([["All", ""], ["Available", "available"], ["Checked Out", "checked_out"]], params[:availability]), class: "form-select" %>
-    <button type="submit" class: "btn btn-primary">Search</button>
-      <button type="button" class: "btn btn-secondary" id="clear-search">Clear</button>
+  <div class="row g-3 align-items-end">
+    <div class="col-md-4">
+      <%= form.label :q, "Search" %>
+      <%= form.text_field :q, value: params[:q], placeholder: "Search by title, author or ISBN", class: "form-control" %>
+    </div>
+    <div class="col-md-3">
+      <%= form.label :genre, "Genre" %>
+      <%= form.select :genre, options_for_select(Book.genres.keys.map { |genre| [genre.humanize, genre] }, params[:genre]), { include_blank: "All genres" }, class: "form-select" %>
+    </div>
+    <div class="col-md-3">
+      <%= form.label :availability, "Availability" %>
+      <%= form.select :availability, options_for_select([["All", ""], ["Available", "available"], ["Unavailable", "unavailable"]], params[:availability]), {}, class: "form-select" %>
+    </div>
+    <div class="col-md-2 d-grid">
+      <%= form.submit "Search", class: "btn btn-primary" %>
+    </div>
   </div>
 <% end %>
-<div class="row">
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
   <% @books.each do |book| %>
-    <div class="col-md-4 mb-4">
+    <div class="col">
       <div class="card h-100">
         <div class="card-body d-flex flex-column">
           <h5 class="card-title"><%= link_to book.title, book_path(book), class: "text-decoration-none" %></h5>
-          <p class="card-text"><%= truncate(book.description.to_plain_text, length: 100) %></p>
+          <p class="card-text"><%= truncate(book.description.to_plain_text, length: 120) %></p>
+          <p class="mb-2"><strong>Available:</strong> <%= book.available_copy_count %> / <%= book.total_copy_count %></p>
           <div class="mt-auto">
             <%= link_to "View Details", book_path(book), class: "btn btn-outline-primary btn-sm" %>
           </div>
@@ -23,4 +32,8 @@
       </div>
     </div>
   <% end %>
+</div>
+
+<div class="mt-4">
+  <%= paginate @books if @books.respond_to?(:total_pages) %>
 </div>

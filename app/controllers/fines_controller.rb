@@ -5,6 +5,16 @@ class FinesController < ApplicationController
     @fines = policy_scope(Fine).order(created_at: :desc).page(params[:page]).per(10)
   end
 
+  def outstanding
+    @fines = policy_scope(Fine).outstanding.order(created_at: :desc).page(params[:page]).per(10)
+    render :index
+  end
+
+  def paid
+    @fines = policy_scope(Fine).paid.order(created_at: :desc).page(params[:page]).per(10)
+    render :index
+  end
+
   def show
   end
 
@@ -18,6 +28,6 @@ class FinesController < ApplicationController
   private
 
   def set_fine
-    @fine = Fine.find(params[:id])
+    @fine = Fine.find_by(id: params[:id])
   end
 end

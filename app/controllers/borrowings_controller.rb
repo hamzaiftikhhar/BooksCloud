@@ -9,14 +9,19 @@ class BorrowingsController < ApplicationController
   end
 
   def create
-    member = Member.find(params[:member_id])
+    member = Member.find_by(membership_number: borrowing_params[:membership_number])
+    raise "Member not found" unless member
+
     book = Book.find(params[:book_id])
 
-    borrowing = Services::BorrowingService.new(member: member, book: book).execute
+    borrowing = Services::BorrowingService.new(member: member, book: book).execute # what this line is doing? t
+
     redirect_to borrowing, notice: "Book issued successfully."
+
   rescue StandardError => e
     redirect_back fallback_location: borrowings_path, alert: e.message
   end
+
 
   def return_book
     Services::ReturnService.new(borrowing: @borrowing).execute
@@ -28,6 +33,10 @@ class BorrowingsController < ApplicationController
   private
 
   def set_borrowing
-    @borrowing = Borrowing.find(params[:id])
+    @borrowing = Borrowing.find_by(id: params[:id])
+  end
+
+  def borrowing_params
+    params.require(:borrowing).permit(:membership_number)
   end
 end

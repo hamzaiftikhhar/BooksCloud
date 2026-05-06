@@ -14,7 +14,13 @@ class BooksController < ApplicationController
     end
   end
 
+  def search
+    index
+    render :index
+  end
+
   def show
+    @members = Member.active.order(:name)
   end
 
   def new

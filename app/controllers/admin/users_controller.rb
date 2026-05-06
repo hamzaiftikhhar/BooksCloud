@@ -5,6 +5,7 @@ module Admin
 
     def index
       @users = User.all.order(created_at: :desc).page(params[:page]).per(10)
+      @user = User.new
     end
 
     def show
@@ -15,7 +16,8 @@ module Admin
       if @user.save
         redirect_to admin_user_path(@user), notice: "Staff account created successfully."
       else
-        render :new, status: :unprocessable_entity
+        @users = User.all.order(created_at: :desc).page(params[:page]).per(10)
+        render :index, status: :unprocessable_entity
       end
     end
 
@@ -26,6 +28,7 @@ module Admin
 
     def change_role
       @user.update!(role: params.require(:user).permit(:role)[:role])
+
       redirect_to admin_user_path(@user), notice: "Staff role updated successfully."
     end
 
@@ -36,7 +39,7 @@ module Admin
     end
 
     def set_user
-      @user = User.find(params[:id])
+      @user = User.find_by(id: params[:id])
     end
 
     def user_params

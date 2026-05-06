@@ -1,0 +1,83 @@
+<% content_for :title, "Staff Accounts" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="mb-0">Staff accounts</h1>
+    <p class="text-muted mb-0">Create and manage library staff users.</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Add staff user</h5></div>
+      <div class="card-body">
+        <%= form_with model: @user, url: admin_users_path, local: true do |form| %>
+          <% if @user.errors.any? %>
+            <div class="alert alert-danger">
+              <ul class="mb-0">
+                <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <div class="mb-3">
+            <%= form.label :email %>
+            <%= form.email_field :email, class: "form-control" %>
+          </div>
+          <div class="mb-3">
+            <%= form.label :password %>
+            <%= form.password_field :password, class: "form-control" %>
+          </div>
+          <div class="mb-3">
+            <%= form.label :password_confirmation %>
+            <%= form.password_field :password_confirmation, class: "form-control" %>
+          </div>
+          <div class="mb-3">
+            <%= form.label :role %>
+            <%= form.select :role, User.roles.keys.map { |role| [role.humanize, role] }, {}, class: "form-select" %>
+          </div>
+          <div class="d-grid">
+            <%= form.submit "Create staff", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Existing staff</h5></div>
+      <div class="card-body p-0">
+        <% if @users.any? %>
+          <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Created</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @users.each do |user| %>
+                  <tr>
+                    <td><%= link_to user.email, admin_user_path(user), class: "text-decoration-none" %></td>
+                    <td><%= user.role.humanize %></td>
+                    <td><%= user.created_at.strftime("%b %d, %Y") %></td>
+                    <td><%= link_to "View", admin_user_path(user), class: "btn btn-outline-primary btn-sm" %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <p class="text-muted p-4 mb-0">No staff accounts have been created yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

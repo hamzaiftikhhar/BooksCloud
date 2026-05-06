@@ -17,14 +17,12 @@ module Services
     end
 
     def process_return
+      overdue = @borrowing.overdue?
+
       Borrowing.transaction do
         @borrowing.mark_as_returned(Time.current)
-        @borrowing.book.increase_available_copies
-
-        if @borrowing.overdue?
-          create_fine
-        end
-
+        @borrowing.book.increase_available_copy_count
+        create_fine if overdue
         @borrowing
       end
     end
@@ -32,13 +30,13 @@ module Services
     def create_fine
       fine_amount = Services::FineCalculationService.call(borrowing: @borrowing)
 
-      if fine_amount > 0
-        Fine.create!(
-          borrowing: @borrowing,
-          amount_due: fine_amount,
-          status: "outstanding"
-        )
-      end
+      return if fine_amount.zero?
+
+      Fine.create!(
+        borrowing: @borrowing,
+        amount_due: fine_amount,
+        status: :outstanding
+      )
     end
   end
 end

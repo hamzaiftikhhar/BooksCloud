@@ -1,12 +1,22 @@
 <div class="container">
-  <div class="row">
-    <div class="col-12">
-      <%= link_to "Back to Books", books_path, class: "btn btn-secondary mb-3" %>
+  <div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center flex-column flex-md-row gap-3">
+      <div>
+        <h1 class="mb-1"><%= @book.title %></h1>
+        <p class="text-muted mb-0">Book details, availability, and issue actions.</p>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <%= link_to "Back to Books", books_path, class: "btn btn-outline-secondary" %>
+        <%= link_to "Edit Book", edit_book_path(@book), class: "btn btn-primary" %>
+        <% if current_user&.admin? %>
+          <%= button_to "Delete Book", @book, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+        <% end %>
+      </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-8">
+  <div class="row g-4">
+    <div class="col-lg-8">
       <div class="card">
         <div class="card-body">
           <% if @book.cover.attached? %>
@@ -15,35 +25,56 @@
             </div>
           <% end %>
 
-          <% cache @book do %>
-            <h1 class="card-title"><%= @book.title %></h1>
-            <p class="card-text"><%= @book.description.to_plain_text %></p>
-            <p class="card-text"><strong>Genre:</strong> <%= @book.genre %></p>
-            <p class="card-text"><strong>ISBN:</strong> <%= @book.isbn %></p>
-            <p class="card-text"><strong>Published on:</strong> <%= @book
-              .publication_date
-              .strftime("%B %d, %Y") %></p>
-          <% end %>
+          <h2 class="h4"><%= @book.title %></h2>
+          <p class="text-muted">by <%= @book.author.name %></p>
+          <p class="mb-3"><%= simple_format(@book.description.to_plain_text) %></p>
+
+          <dl class="row mb-0">
+            <dt class="col-sm-4">Genre</dt>
+            <dd class="col-sm-8"><%= @book.genre.humanize %></dd>
+
+            <dt class="col-sm-4">ISBN</dt>
+            <dd class="col-sm-8"><%= @book.isbn %></dd>
+
+            <dt class="col-sm-4">Publication date</dt>
+            <dd class="col-sm-8"><%= @book.publication_date.strftime("%B %d, %Y") %></dd>
+          </dl>
 
           <%= render "inventory", book: @book %>
         </div>
       </div>
     </div>
 
-
-
-    <div class="col-md-4">
-      <% if user_signed_in? %>
-        <div class="card">
-          <div class="card-header">
-            <h5>Admin Actions</h5>
-          </div>
-          <div class="card-body">
-            <%= link_to "Edit Book", [:edit, @book], class: "btn btn-primary w-100 mb-2" %>
-            <%= button_to "Delete Book", @book, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger w-100" %>
-          </div>
+    <div class="col-lg-4">
+      <div class="card mb-4">
+        <div class="card-header"><h5 class="mb-0">Issue this book</h5></div>
+        <div class="card-body">
+          <% if @members.any? %>
+            <%= form_with url: borrowings_path, local: true do |form| %>
+              <%= hidden_field_tag :book_id, @book.id %>
+              <div class="mb-3">
+                <%= form.label :membership_number, "Enter Membership Number" %>
+                <%= form.text_field :membership_number, class: "form-control" %>
+              </div>
+              <div class="d-grid">
+                
+                <%= form.submit "Fetch Member Details", class: "btn btn-primary", data: { turbo_confirm: "Issue this book to the selected member?" }  %>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted mb-0">No active members are available to issue this book.</p>
+          <% end %>
         </div>
-      <% end %>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><h5 class="mb-0">Quick info</h5></div>
+        <div class="card-body">
+          <p class="mb-2"><strong>Available copies:</strong> <%= @book.available_copy_count %></p>
+          <p class="mb-2"><strong>Total copies:</strong> <%= @book.total_copy_count %></p>
+          <p class="mb-0"><strong>Borrowed count:</strong> <%= @book.borrowings.count %></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

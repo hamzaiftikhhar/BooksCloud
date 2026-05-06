@@ -12,13 +12,13 @@ class Book < ApplicationRecord
   validates :title, presence: true, length: { minimum: 1, maximum: 255 }
   validates :isbn, presence: true, uniqueness: true
 
-validate :description_presence
+  validate :description_presence
 
-def description_presence
-  if description.body.to_plain_text.strip.blank?
-    errors.add(:description, "can't be blank")
+  def description_presence
+    if description.blank? || description.body.to_plain_text.strip.blank?
+      errors.add(:description, "can't be blank")
+    end
   end
-end
 
   validates :publication_date, presence: true
   validates :total_copy_count, presence: true, numericality: { only_integer: true, greater_than: 0 }

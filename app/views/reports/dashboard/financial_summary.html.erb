@@ -1,0 +1,37 @@
+<% content_for :title, "Financial Summary" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="mb-0">Financial Summary</h1>
+    <p class="text-muted mb-0">Total fines collected versus outstanding.</p>
+  </div>
+  <%= link_to "Back to reports", reports_root_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<% summary = @presenter.financial_summary %>
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card bg-light h-100">
+      <div class="card-body">
+        <h5>Total collected</h5>
+        <p class="display-6">PKR <%= summary[:paid_fines] %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card bg-light h-100">
+      <div class="card-body">
+        <h5>Outstanding fines</h5>
+        <p class="display-6">PKR <%= summary[:outstanding_fines] %></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card bg-light h-100">
+      <div class="card-body">
+        <h5>Total fines</h5>
+        <p class="display-6">PKR <%= summary[:total_fines] %></p>
+      </div>
+    </div>
+  </div>
+</div>

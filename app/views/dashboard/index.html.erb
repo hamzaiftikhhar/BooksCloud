@@ -1,27 +1,14 @@
-<%# what should be here 
-This is the dashboard page where users can see an overview of the products. It includes a search bar to filter products and a list of products with options to view details.
-The content_for :title is used to set the page title dynamically. In this case, it sets the title to "Books". This allows the layout to display the appropriate title for this page.%>
-
-<% content_for :title, "Books" %> 
+<% content_for :title, "Dashboard" %>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
-    <h1 class="mb-0">Books</h1>
-    <p class="text-muted mb-0">Browse all available books and manage them from one place.</p>
+    <h3 class="mb-2">Dashboard</h3>
+    <h2 style="color: purple;">Hello <%= current_user.email %></h2>
+    <date style="color: gray;"><%= Time.current.strftime("%B %d, %Y") %></date>
+    <p class="text-muted mb-0 mt-5">Library overview and quick actions.</p>
   </div>
-  <% if policy(Book).create? %>
-    <%= link_to "New Book", new_book_path, class: "btn btn-outline-dark" %>
-  <% end %>
 </div>
 
-<%= form_with url: books_path, method: :get, data: { controller: "search", turbo_frame: "books" } do %>
-  <%= text_field_tag :query,
-        params[:query],
-        placeholder: "Search books...",
-        class: "form-control mb-4 border-1 rounded-4 input-group-lg",
-        data: { action: "input->search#debounce" } %>
-
-<% end %>
 <div class="row g-4 mb-4">
   <div class="col-md-3">
     <div class="card text-white bg-primary h-100">
@@ -47,70 +34,136 @@ The content_for :title is used to set the page title dynamically. In this case, 
       </div>
     </div>
   </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-danger h-100">
-        <div class="card-body d-flex flex-column justify-content-center align-items-center">
-            <h5 class="card-title">Overdue Books</h5>
-            <p class="card-text display-4"><%= @overdue_borrowings_count %></p>
-        </div>
-        </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-danger h-100">
+      <div class="card-body d-flex flex-column justify-content-center align-items-center">
+        <h5 class="card-title">Overdue Books</h5>
+        <p class="card-text display-4"><%= @overdue_borrowings_count %></p>
+      </div>
     </div>
-
-  <!-- Add more cards as needed -->
+  </div>
 </div>
-<div class="card mb-4">
-  <div class="card-header">
-    <h5 class="mb-0">Recently Added Books</h5>
-  </div>
-  <div class="card-body">
-    <% if @books.any? %>
-      <ul class="list-group list-group-flush">
-        <% @books.order(created_at: :desc).limit(5).each do |book| %>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <%= link_to book.title, book_path(book), class: "text-decoration-none" %>
-            <span class="badge bg-secondary"><%= book.created_at.strftime("%b %d, %Y") %></span>
-          </li>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Recently Added Books</h5>
+      </div>
+      <div class="card-body">
+        <% if @recent_books.any? %>
+          <ul class="list-group list-group-flush">
+            <% @recent_books.each do |book| %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <%= link_to book.title, book_path(book), class: "text-decoration-none" %>
+                <span class="badge bg-secondary"><%= book.created_at.strftime("%b %d, %Y") %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted mb-0">No books have been added yet.</p>
         <% end %>
-      </ul>
-    <% else %>      <p class="text-muted mb-0">No books have been added yet.</p>
-    <% end %>
+      </div>
+    </div>
   </div>
-</div>  
 
-<div class="card mb-4">
-  <div class="card-header">
-    <h5 class="mb-0">Top Borrowed Books</h5>
-  </div>
-  <div class="card-body">
-    <% if @books.any? %>
-      <ul class="list-group list-group-flush">
-        <% @books.left_joins(:borrowings).group(:id).order('COUNT(borrowings.id) DESC').limit(5).each do |book| %>
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            <%= link_to book.title, book_path(book), class: "text-decoration-none" %>
-            <span class="badge bg-secondary"><%= book.borrowings.count %> borrows</span>
-          </li>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Top Borrowed Books</h5>
+      </div>
+      <div class="card-body">
+        <% if @top_borrowed_books.any? %>
+          <ul class="list-group list-group-flush">
+            <% @top_borrowed_books.each do |book| %>
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <%= link_to book.title, book_path(book), class: "text-decoration-none" %>
+                <span class="badge bg-secondary"><%= book.borrow_count %> borrows</span>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted mb-0">No books have been borrowed yet.</p>
         <% end %>
-      </ul>
-    <% else %>
-      <p class="text-muted mb-0">No books have been borrowed yet.</p    >
-    <% end %>
+      </div>
+    </div>
   </div>
-</div>      
+</div>
 
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Recent Borrowings</h5>
+      </div>
+      <div class="card-body">
+        <% if @recent_borrowings.any? %>
+          <ul class="list-group list-group-flush">
+            <% @recent_borrowings.each do |borrowing| %>
+              <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                  <div>
+                    <h6 class="mb-1"><%= link_to borrowing.book.title, borrowing_path(borrowing), class: "text-decoration-none" %></h6>
+                    <p class="mb-1 text-muted">by <%= borrowing.member.name %></p>
+                  </div>
+                  <span class="badge bg-<%= borrowing.active? ? "success" : "secondary" %>"><%= borrowing.status.humanize %></span>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="text-muted mb-0">No borrowings have been recorded yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
 
-<div class="row">
-    <h2 class="mb-4">All Books</h2>
-  <% @books.each do |book| %>
-    <div class="col-md-4 mb-4">
-      <div class="card h-100">
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title"><%= link_to book.title, book_path(book), class: "text-decoration-none" %></h5>
-          <p class="card-text"><%= truncate(book.description.to_plain_text, length: 100) %></p>
-          <div class="mt-auto">
-            <%= link_to "View Details", book_path(book), class: "btn btn-outline-primary btn-sm" %>
-          </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Quick Actions</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          <%= link_to "Add New Book", new_book_path, class: "btn btn-outline-primary" %>
+          <%= link_to "Register Member", new_member_path, class: "btn btn-outline-success" %>
+          <%= link_to "View All Borrowings", borrowings_path, class: "btn btn-outline-warning" %>
+          <%= link_to "View Reports", reports_root_path, class: "btn btn-outline-info" %>
+          <% if current_user&.admin? %>
+            <%= link_to "Admin Panel", admin_root_path, class: "btn btn-outline-danger" %>
+          <% end %>
         </div>
       </div>
     </div>
-  <% end %>
+  </div>
 </div>
+#there are two major issues , while issuing the book I got this error -> uninitialized constant BorrowingsController::Services
+#second error is when click the dashboard i got this error  @top_borrowed_books = MostBorrowedBooksQuery.call(5)
+  thissi hte most error i got everytime   @most_borrowed_books = MostBorrowedBooksQuery.call(10)
+
+  also give me the guide how can i work as an admina also i have seen that when i 
+
+  also when i cahnge the role of the member to the admin this is the error thta i got 
+        @user.update!(role: params.require(:user).permit(:role)[:role])
+
+        ActionController::ParameterMissing in Admin::UsersController#change_role
+param is missing or the value is empty: user
+
+
+When i try to edit the description of the book this is the error that i got
+<!-- BEGIN app/views/layouts/action_text/contents/_content.html.erb
+--><div class="trix-content">
+  <!-- BEGIN /Users/apple/.rvm/gems/ruby-3.4.8/gems/actiontext-8.1.3/app/views/action_text/contents/_content.html.erb
+-->This is hte end book
+<!-- END /Users/apple/.rvm/gems/ruby-3.4.8/gems/actiontext-8.1.3/app/views/action_text/contents/_content.html.erb --></div>
+<!-- END app/views/layouts/action_text/contents/_content.html.erb -->
+
+
+also add the validation that the ISBN must follow the format Length: 13 digits (starts with 978 or 979) or 10 digits.Hyphens/Spaces: Do not enter hyphens or spaces.Characters: All digits should be 0–9.The "X" Check Digit (ISBN-10 only): If a 10-digit ISBN ends with the letter 'X', enter it as an uppercase 'X'. Note: ISBN-13 does not use 'X'.ExamplesCorrect (ISBN-13): 9783161484100 (instead of 978-3-16-148410-0)Correct (ISBN-10): 030640615X (instead of 0-306-40615-X)Key DifferencesFeatureISBN-13 (Modern)ISBN-10 (Pre-2007)Length13 Digits10 DigitsStart978 or 979Variable (0, 1, 2, etc.)Final CharNumeric (0-9)Numeric (0-9) or 'X'
+
+
+Also hte published data cannot be in the future. It must be a valid date in the past or present.
+
+also i want to give a beautiful design to the dashboard page and show the image of the book cover if any 
+
+also the 

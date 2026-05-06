@@ -8,17 +8,18 @@ class Borrowing < ApplicationRecord
   validates :member_id, :book_id, :due_date, presence: true
   validates :status, presence: true
 
-  # scope :active, -> { where(status: statuses[:active]) }
-  # scope :returned, -> { where(status: statuses[:returned]) }
-
+  scope :active, -> { where(status: statuses[:active]) }
+  scope :returned, -> { where(status: statuses[:returned]) }
   scope :overdue, -> { active.where("due_date < ?", Date.current) }
-
 
   before_create :set_issue_date
   before_create :set_due_date # is this callback or validation?
 
   def overdue?
-    active? && due_date.present? && due_date < Date.current
+    return false unless due_date.present?
+
+    comparison_date = return_date&.to_date || Date.current
+    comparison_date > due_date
   end
 
   def days_overdue

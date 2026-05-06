@@ -8,6 +8,9 @@ class Fine < ApplicationRecord
   validates :amount_due, numericality: { greater_than: 0 }
   validates :amount_paid, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
+  scope :outstanding, -> { where(status: statuses[:outstanding]) }
+  scope :paid, -> { where(status: statuses[:paid]) }
+
   # scope :outstanding, -> { where(status: :outstanding) }
   # scope :paid, -> { where(status: :paid) }
 

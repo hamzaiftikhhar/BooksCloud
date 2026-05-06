@@ -1,0 +1,98 @@
+<% content_for :title, @member.name %>
+
+<div class="d-flex justify-content-between align-items-start mb-4 gap-3 flex-column flex-md-row">
+  <div>
+    <h1 class="mb-1"><%= @member.name %></h1>
+    <p class="text-muted mb-0">Member profile and borrowing history overview.</p>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <%= link_to "Edit Member", edit_member_path(@member), class: "btn btn-primary" %>
+    <% if policy(@member).suspend? %>
+      <% if @member.active? %>
+        <%= button_to "Suspend Member", suspend_member_path(@member), method: :patch, class: "btn btn-warning" %>
+      <% else %>
+        <%= button_to "Reactivate Member", reactivate_member_path(@member), method: :patch, class: "btn btn-success" %>
+      <% end %>
+    <% end %>
+    <% if current_user&.admin? %>
+      <%= button_to "Delete Member", @member, method: :delete, data: { turbo_confirm: "Delete this member?" }, class: "btn btn-danger" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card mb-4">
+      <div class="card-header"><h5 class="mb-0">Member details</h5></div>
+      <div class="card-body">
+        <dl class="row">
+          <dt class="col-5">Membership #</dt>
+          <dd class="col-7"><%= @member.membership_number %></dd>
+
+          <dt class="col-5">Email</dt>
+          <dd class="col-7"><%= @member.email %></dd>
+
+          <dt class="col-5">Phone</dt>
+          <dd class="col-7"><%= @member.phone %></dd>
+
+          <dt class="col-5">Status</dt>
+          <dd class="col-7"><span class="badge bg-<%= @member.active? ? "success" : @member.suspended? ? "warning" : "secondary" %>"><%= @member.status.humanize %></span></dd>
+
+          <dt class="col-5">Borrow limit</dt>
+          <dd class="col-7"><%= @member.max_books_allowed %></dd>
+
+          <dt class="col-5">Active borrows</dt>
+          <dd class="col-7"><%= @member.active_borrowings.count %></dd>
+        </dl>
+      </div>
+      <div class="card-footer">
+        <%= link_to "View full history", member_borrowing_history_index_path(@member), class: "btn btn-outline-primary w-100" %>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Issue a book</h5></div>
+      <div class="card-body">
+        <% if @available_books.any? %>
+          <%= form_with url: borrowings_path, local: true do |form| %>
+            <%= hidden_field_tag :member_id, @member.id %>
+            <div class="mb-3">
+              <%= form.label :book_id, "Select Book" %>
+              <%= form.collection_select :book_id, @available_books, :id, :title, { prompt: "Choose a book" }, class: "form-select" %>
+            </div>
+            <div class="d-grid">
+              <%= form.submit "Issue Book", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-muted mb-0">No books are currently available to issue.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card mb-4">
+      <div class="card-header"><h5 class="mb-0">Recent borrowings</h5></div>
+      <div class="card-body">
+        <% if @member.borrowings.any? %>
+          <div class="list-group">
+            <% @member.borrowings.order(created_at: :desc).limit(6).each do |borrowing| %>
+              <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                  <div>
+                    <h6 class="mb-1"><%= link_to borrowing.book.title, borrowing_path(borrowing), class: "text-decoration-none" %></h6>
+                    <p class="mb-1 text-muted">Issued <%= borrowing.issue_date&.strftime("%b %d, %Y") %>, due <%= borrowing.due_date.strftime("%b %d, %Y") %></p>
+                  </div>
+                  <span class="badge bg-<%= borrowing.active? ? "success" : "secondary" %>"><%= borrowing.status.humanize %></span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">This member has no borrowing records yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

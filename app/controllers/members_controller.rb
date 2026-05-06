@@ -6,6 +6,11 @@ class MembersController < ApplicationController
   end
 
   def show
+    if @member.nil?
+      redirect_to members_path, alert: "Member not found."
+      return
+    end
+    @available_books = Book.where("available_copy_count > 0").order(:title)
   end
 
   def new
@@ -22,6 +27,9 @@ class MembersController < ApplicationController
   end
 
   def edit
+    if @member.nil?
+      redirect_to members_path, alert: "Member not found."
+    end
   end
 
   def update
@@ -56,7 +64,7 @@ class MembersController < ApplicationController
   private
 
   def set_member
-    @member = Member.find(params[:id])
+    @member = Member.find_by(id: params[:id])
   end
 
   def member_params
