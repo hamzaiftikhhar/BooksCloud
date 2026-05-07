@@ -7,8 +7,12 @@ Rails.application.routes.draw do
   resources :books do
     collection do
       get :search
+      get :search_authors
     end
   end
+
+  # Author Management
+  resources :authors
 
   # Member Management
   resources :members do

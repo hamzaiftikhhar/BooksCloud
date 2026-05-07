@@ -47,39 +47,107 @@
       class: "form-select select2" %>   
 </div>
 
-<div data-controller="author-search">
-
+<div id="author-search-container">
   <div class="mb-3">
-
-    <%= form.label :author_name, "Author Name" %>
-
+    <label for="book_author_name">Author Name</label>
     <div class="position-relative">
-<%= form.text_field :author_name,
-  class: "form-control",
-  placeholder: "e.g. J.R.R. Tolkien",
-  autocomplete: "off",
-  data: {
-    action: "input->author-search#search",
-    author_search_target: "input"
-  } %>
-    <div
-  class="position-absolute w-100 mt-1 bg-white border rounded shadow-sm"
-  style="display: none; max-height: 300px; overflow-y: auto; z-index: 1000;"
-  data-author-search-target="suggestions">
-</div>
-
+      <input class="form-control" 
+             placeholder="e.g. J.R.R. Tolkien" 
+             autocomplete="off" 
+             type="text" 
+             name="book[author_name]" 
+             id="book_author_name" />
+      
+      <div id="author-suggestions" class="position-absolute w-100 mt-1 bg-white border rounded shadow-sm"
+           style="display: none; max-height: 300px; overflow-y: auto; z-index: 1000;">
+      </div>
     </div>
-
-    <small class="text-muted">
-      Start typing to search authors or create a new one.
-    </small>
-
+    <small class="text-muted">Start typing to search authors or create a new one.</small>
   </div>
-
-  <%= form.hidden_field :author_id,
-        id: "selected_author_id" %>
-
+  <input id="selected_author_id" type="hidden" name="book[author_id]" />
 </div>
+
+<script>
+  (function() {
+    const input = document.getElementById('book_author_name');
+    const suggestionsBox = document.getElementById('author-suggestions');
+    const authorIdInput = document.getElementById('selected_author_id');
+    
+    let debounceTimer = null;
+    const debounceDelay = 250;
+    
+    input.addEventListener('input', function(event) {
+      clearTimeout(debounceTimer);
+      
+      const query = input.value.trim();
+      console.log(`Author search triggered: "${query}"`);
+      
+      if (query.length < 2) {
+        suggestionsBox.style.display = 'none';
+        return;
+      }
+      
+      debounceTimer = setTimeout(() => {
+        fetchAuthors(query);
+      }, debounceDelay);
+    });
+    
+    function fetchAuthors(query) {
+      const url = `/books/search_authors?q=${encodeURIComponent(query)}`;
+      console.log(`Fetching authors from: ${url}`);
+      
+      fetch(url, {
+        headers: { Accept: 'application/json' }
+      })
+        .then(r => {
+          console.log(`Response status: ${r.status}`);
+          return r.json();
+        })
+        .then(data => {
+          console.log(`Authors data:`, data);
+          renderSuggestions(data);
+        })
+        .catch(err => {
+          console.error('Fetch error:', err);
+          suggestionsBox.style.display = 'none';
+        });
+    }
+    
+    function renderSuggestions(authors) {
+      suggestionsBox.innerHTML = '';
+      
+      if (!authors || !authors.length) {
+        console.log('No authors found');
+        suggestionsBox.style.display = 'none';
+        return;
+      }
+      
+      console.log(`Rendering ${authors.length} suggestions`);
+      
+      authors.forEach(author => {
+        const div = document.createElement('div');
+        div.textContent = author.name;
+        div.style.cursor = 'pointer';
+        div.style.padding = '8px 12px';
+        div.style.borderBottom = '1px solid #ddd';
+        
+        div.onmouseover = () => { div.style.backgroundColor = '#f5f5f5'; };
+        div.onmouseout = () => { div.style.backgroundColor = 'transparent'; };
+        
+        div.onclick = () => {
+          console.log(`Selected author: ${author.name} (ID: ${author.id})`);
+          input.value = author.name;
+          authorIdInput.value = author.id;
+          suggestionsBox.style.display = 'none';
+        };
+        
+        suggestionsBox.appendChild(div);
+      });
+      
+      suggestionsBox.style.display = 'block';
+    }
+  })();
+</script>
   <div class="mb-3">
     <%= form.label :publication_date %>
     <%= form.date_field :publication_date, class: "form-control" %>

@@ -9,10 +9,6 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
-@import "bootstrap.min";
-@import "custom";
-@import "trix";
-
 
 .custom-card {
   border-radius: 20px; 

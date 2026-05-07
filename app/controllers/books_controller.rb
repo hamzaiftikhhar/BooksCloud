@@ -98,12 +98,6 @@ end
     book.author_id = author.id
   end
 
-  private
-
-  def set_book
-    @book = Book.find_by(id: params[:id])
-  end
-
   def book_params
     params.require(:book).permit(
       :title,
@@ -117,4 +111,10 @@ end
       :cover,
     )
   end
+end
+
+private
+
+def set_book
+  @book = Book.find(params[:id])
 end

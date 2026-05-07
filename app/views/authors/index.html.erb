@@ -1,0 +1,43 @@
+<% content_for :title, "Authors" %>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Authors</h1>
+  <%= link_to "Add New Author", new_author_path, class: "btn btn-primary" %>
+</div>
+
+<% if @authors.any? %>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th>
+          <th>Books</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @authors.each do |author| %>
+          <tr>
+            <td>
+              <%= link_to author.name, author_path(author), class: "text-decoration-none" %>
+            </td>
+            <td>
+              <span class="badge bg-secondary"><%= author.books.count %></span>
+            </td>
+            <td class="text-end">
+              <%= link_to "View", author_path(author), class: "btn btn-sm btn-outline-primary" %>
+              <%= link_to "Edit", edit_author_path(author), class: "btn btn-sm btn-outline-warning" %>
+              <%= link_to "Delete", author_path(author), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= paginate @authors %>
+<% else %>
+  <div class="alert alert-info">
+    <p class="mb-0">No authors found. <%= link_to "Create one", new_author_path, class: "alert-link" %></p>
+  </div>
+<% end %>

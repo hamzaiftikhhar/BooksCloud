@@ -1,0 +1,73 @@
+<% content_for :title, @author.name %>
+
+<div class="d-flex justify-content-between align-items-start mb-4 gap-3 flex-column flex-md-row">
+  <div>
+    <h1 class="mb-1"><%= @author.name %></h1>
+    <p class="text-muted mb-0">Author profile and bibliography.</p>
+  </div>
+  <div class="d-flex gap-2 flex-wrap">
+    <%= link_to "Back to Authors", authors_path, class: "btn btn-outline-secondary" %>
+    <%= link_to "Edit", edit_author_path(@author), class: "btn btn-outline-warning" %>
+    <%= link_to "Delete", author_path(@author), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger" %>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title">Author Info</h6>
+        <dl class="mb-0">
+          <dt class="text-muted">First Name</dt>
+          <dd><%= @author.first_name %></dd>
+
+          <dt class="text-muted mt-2">Last Name</dt>
+          <dd><%= @author.last_name %></dd>
+
+          <dt class="text-muted mt-2">Total Books</dt>
+          <dd><strong><%= @books.count %></strong></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Books by <%= @author.first_name %></h5>
+      </div>
+      <div class="card-body">
+        <% if @books.any? %>
+          <div class="row g-3">
+            <% @books.each do |book| %>
+              <div class="col-md-6 col-lg-4">
+                <div class="card custom-card h-100">
+                  <div class="card-body">
+                    <h6 class="card-title">
+                      <%= link_to book.title, book_path(book), class: "text-decoration-none" %>
+                    </h6>
+                    <p class="card-text text-muted small">
+                      <strong>ISBN:</strong> <%= book.isbn %><br>
+                      <strong>Genre:</strong> <%= book.genre.humanize %><br>
+                      <strong>Published:</strong> <%= book.publication_date&.strftime("%b %Y") %>
+                    </p>
+                    <p class="card-text small">
+                      <span class="badge <%= book.available_copy_count > 0 ? 'bg-success' : 'bg-danger' %>">
+                        <%= book.available_copy_count %> available
+                      </span>
+                    </p>
+                  </div>
+                  <div class="card-footer bg-white border-top">
+                    <%= link_to "View", book_path(book), class: "btn btn-sm btn-primary" %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted">No books by this author yet.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
