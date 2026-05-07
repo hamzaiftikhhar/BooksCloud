@@ -1,4 +1,4 @@
-<%= form_with model: @book do |form| %>
+<%= form_with model: @book, data: { turbo: false } do |form| %>
 
   <h4 class="mb-4">Add New Book</h4>
 
@@ -47,12 +47,39 @@
       class: "form-select select2" %>   
 </div>
 
+<div data-controller="author-search">
+
   <div class="mb-3">
-    <%= form.label :author_id, "Author" %>
-    <%= form.collection_select :author_id, Author.all, :id, :first_name,
-        { prompt: "Select an author" },
-        class: "form-select" %>
+
+    <%= form.label :author_name, "Author Name" %>
+
+    <div class="position-relative">
+<%= form.text_field :author_name,
+  class: "form-control",
+  placeholder: "e.g. J.R.R. Tolkien",
+  autocomplete: "off",
+  data: {
+    action: "input->author-search#search",
+    author_search_target: "input"
+  } %>
+    <div
+  class="position-absolute w-100 mt-1 bg-white border rounded shadow-sm"
+  style="display: none; max-height: 300px; overflow-y: auto; z-index: 1000;"
+  data-author-search-target="suggestions">
+</div>
+
+    </div>
+
+    <small class="text-muted">
+      Start typing to search authors or create a new one.
+    </small>
+
   </div>
+
+  <%= form.hidden_field :author_id,
+        id: "selected_author_id" %>
+
+</div>
   <div class="mb-3">
     <%= form.label :publication_date %>
     <%= form.date_field :publication_date, class: "form-control" %>

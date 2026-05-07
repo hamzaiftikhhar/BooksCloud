@@ -16,8 +16,8 @@
   </div>
 
   <div class="row g-4">
-    <div class="col-lg-8">
-      <div class="card">
+    <div class="col-lg-8 ">
+      <div class="card h-100 img-card border-0 shadow-sm custom-card">
         <div class="card-body">
           <% if @book.cover.attached? %>
             <div class="text-center mb-3">
@@ -49,18 +49,24 @@
       <div class="card mb-4">
         <div class="card-header"><h5 class="mb-0">Issue this book</h5></div>
         <div class="card-body">
-          <%= turbo_frame_tag "member_check" do %>
-            <%= form_with url: search_member_borrowings_path, method: :get, local: false, data: { turbo_frame: "member_check" } do |f| %>
-              <%= hidden_field_tag :book_id, @book.id %>
-              <div class="mb-3">
-                <%= f.label :membership_number, "Search Member by ID" %>
-                <%= f.text_field :membership_number, placeholder: "Enter membership number", class: "form-control" %>
-              </div>
-              <%= f.submit "Search & Verify Member", class: "btn btn-outline-primary w-100" %>
-            <% end %>
+          <%= form_with url: search_member_borrowings_path, method: :get, data: { turbo_frame: "member_check" } do |f| %>
+
+            <%= hidden_field_tag :book_id, @book.id %>
+            <div class="mb-3">
+              <%# data: { turbo_frame: "member_check" } this line is passing the data to the member_check form  %>
+              <%= f.label :membership_number, "Search Member by ID" %>
+
+              <%= f.text_field :membership_number, placeholder: "Enter membership number", class: "form-control" %>
+            </div>
+            
+            <%= f.submit "Search & Verify Member", class: "btn btn-outline-primary w-100" %>
           <% end %>
         </div>
       </div>
+
+      <%= turbo_frame_tag "member_check" do %>
+      <% end %>
+
 
 
       <div class="card">

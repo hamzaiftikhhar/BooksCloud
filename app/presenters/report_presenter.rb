@@ -2,7 +2,7 @@ class ReportPresenter
   def initialize
     @most_borrowed_books = MostBorrowedBooksQuery.call(10)
     @overdue_members = OverdueBorrowsQuery.call
-    @monthly_borrowing_count = MonthlyBorrowingCountQuery.call
+    @monthly_borrowing_count = MonthlyBorrowinsgCountQuery.call
   end
 
   def most_borrowed_books

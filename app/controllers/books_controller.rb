@@ -20,7 +20,7 @@ class BooksController < ApplicationController
   end
 
   def show
-    @members = Member.active.order(:name)
+    @members = Member.active.order(:name) # why
   end
 
   def new
@@ -29,6 +29,9 @@ class BooksController < ApplicationController
 
   def create
     @book = Book.new(book_params)
+
+    handle_author_creation(@book)
+
     if @book.save
       redirect_to @book, notice: "Book created successfully."
     else
@@ -40,12 +43,34 @@ class BooksController < ApplicationController
   end
 
   def update
+    handle_author_creation(@book)
+
     if @book.update(book_params)
       redirect_to @book, notice: "Book updated successfully."
     else
       render :edit, status: :unprocessable_entity
     end
   end
+
+def search_authors
+  query = params[:q].to_s.strip.downcase
+
+  return render json: [] if query.blank?
+
+  authors = Author.where(
+    "LOWER(first_name) LIKE :q OR LOWER(last_name) LIKE :q OR LOWER(first_name || ' ' || last_name) LIKE :q",
+    q: "%#{query}%"
+  ).limit(10)
+
+  render json: authors.map { |a|
+    {
+      id: a.id,
+      name: a.name,
+      first_name: a.first_name,
+      last_name: a.last_name
+    }
+  }
+end
 
   def destroy
     if current_user.admin?
@@ -54,6 +79,23 @@ class BooksController < ApplicationController
     else
       redirect_to @book, alert: "Only admins can delete books."
     end
+  end
+  def handle_author_creation(book)
+    return if params[:book][:author_id].present?
+
+    return if params[:book][:author_name].blank?
+
+    author_name = params[:book][:author_name].strip
+    first_name, last_name = author_name.split(" ", 2)
+
+    last_name ||= first_name
+
+    author = Author.find_or_create_by(
+      first_name: first_name,
+      last_name: last_name
+    )
+
+    book.author_id = author.id
   end
 
   private
@@ -72,7 +114,7 @@ class BooksController < ApplicationController
       :publication_date,
       :total_copy_count,
       :available_copy_count,
-      :cover
+      :cover,
     )
   end
 end

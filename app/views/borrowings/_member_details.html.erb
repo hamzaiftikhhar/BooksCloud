@@ -1,62 +1,114 @@
-<%# why this is not showing styling %>
+<%= turbo_frame_tag "member_check" do%>
 
-<div class="border rounded-3 p-4 bg-white">
-  <% if member %>
-    <div class="mb-3">
-      <div class="d-flex justify-content-between align-items-start gap-3">
-        <div>
-          <h5 class="mb-1 fw-bold">Member Verification</h5>
-          <p class="text-muted small mb-1">ID: #<%= member.membership_number %></p>
-          <p class="mb-0"><strong><%= member.name %></strong></p>
-        </div>
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+
+      <% if member %>
+
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h5 class="fw-bold mb-1">Member Verification</h5>
+
+            <p class="text-muted small mb-1">
+              ID: <%= member.membership_number %>
+            </p>
+
+            <h6 class="mb-0 fw-semibold">
+              <%= member.name %>
+            </h6>
+          </div>
+
           <% if member.suspended? %>
-            <span class="badge rounded-pill bg-danger">Suspended</span>
+            <span class="badge bg-danger rounded-pill">
+              Suspended
+            </span>
+
           <% elsif member.expired? %>
-            <span class="badge rounded-pill bg-warning text-dark">Expired</span>
+            <span class="badge bg-warning text-dark rounded-pill">
+              Expired
+            </span>
+
           <% else %>
-            <span class="badge rounded-pill bg-success">Active</span>
+            <span class="badge bg-success rounded-pill">
+              Active
+            </span>
           <% end %>
         </div>
-      </div>
 
-    <div class="row g-2 text-center mb-3">
-      <div class="col-6">
-        <div class="p-2 border rounded-3 bg-light">
-          <small class="text-muted d-block">Current Loans</small>
-          <span class="fw-bold <%= 'text-danger' if member.active_borrowings.count >= member.max_books_allowed %>">
-            <%= member.active_borrowings.count %> / <%= member.max_books_allowed %>
-          </span>
+        <div class="row g-3 mb-3">
+
+          <div class="col-6">
+            <div class="bg-light rounded p-3 text-center h-100">
+              <small class="text-muted d-block">
+                Current Loans
+              </small>
+
+              <div class="fw-bold fs-5">
+                <%= member.active_borrowings.count %> /
+                <%= member.max_books_allowed %>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="bg-light rounded p-3 text-center h-100">
+              <small class="text-muted d-block">
+                Overdue Fines
+              </small>
+
+              <div class="fw-bold fs-5">
+                $<%= number_with_precision(member.fines.outstanding.sum(:amount_due), precision: 2) %>
+              </div>
+            </div>
+          </div>
+
         </div>
-      </div>
-      <div class="col-6">
-        <div class="p-2 border rounded-3 bg-light">
-          <small class="text-muted d-block">Overdue Fines</small>
-          <span class="fw-bold text-dark">$<%= number_with_precision(member.fines.outstanding.sum(:amount_due), precision: 2) %></span>
+
+        <div class="alert alert-secondary py-2 mb-3">
+          Issuing:
+          <strong><%= book.title %></strong>
         </div>
-      </div>
-    </div>
 
-    <p class="text-muted small mb-3">
-      Issuing: <strong><%= book.title %></strong>
-    </p>
+        <% if !member.suspended? &&
+              !member.expired? &&
+              member.active_borrowings.count < member.max_books_allowed %>
 
-    <div class="d-flex justify-content-end gap-2">
-      <% if !member.suspended? && !member.expired? && member.active_borrowings.count < member.max_books_allowed %>
-        <%= button_to borrowings_path(book_id: book.id, borrowing: { membership_number: member.membership_number }),
-            method: :post,
-            class: "btn btn-primary rounded-pill px-4 shadow-sm",
-            data: { turbo: false } do %>
-          Confirm & Issue <i class="btn btn-dark"></i>
+          <%= button_to borrowings_path(
+                book_id: book.id,
+                borrowing: {
+                  membership_number: member.membership_number
+                }
+              ),
+              method: :post,
+              class: "btn btn-primary w-100" do %>
+
+            Confirm & Issue
+
+          <% end %>
+
+        <% else %>
+
+          <button class="btn btn-secondary w-100" disabled>
+            Ineligible to Borrow
+          </button>
+
         <% end %>
+
       <% else %>
-        <button class="btn btn-secondary rounded-pill px-4" disabled>Ineligible to Borrow</button>
+
+        <div class="text-center py-4">
+          <h5 class="text-danger mb-2">
+            Member Not Found
+          </h5>
+
+          <p class="text-muted mb-0">
+            No member matches that membership number.
+          </p>
+        </div>
+
       <% end %>
+
     </div>
-  <% else %>
-    <div class="text-center py-4 text-muted">
-      <i class="bi bi-exclamation-triangle display-4"></i>
-      <h5 class="mt-3">Member Not Found</h5>
-      <p class="mb-0">No member matches that membership number.</p>
-    </div>
-  <% end %>
-</div>
+  </div>
+
+<% end %>
