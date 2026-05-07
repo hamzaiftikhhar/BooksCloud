@@ -9,7 +9,6 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
-
 .custom-card {
   border-radius: 20px; 
   transition: transform 0.2s ease, box-shadow 0.2s ease;

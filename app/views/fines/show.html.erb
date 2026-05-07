@@ -31,7 +31,7 @@
     </dl>
 
     <% if @fine.outstanding? %>
-      <%= button_to "Mark as paid", mark_as_paid_fine_path(@fine), method: :post, class: "btn btn-primary" %>
+      <%= button_to "Mark as paid", mark_as_paid_fine_path(@fine), data: { turbo_confirm: "Are you sure?" }, method: :post, class: "btn btn-primary" %>
     <% end %>
   </div>
 </div>
