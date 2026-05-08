@@ -9,7 +9,7 @@
         <%= link_to "Back to Books", books_path, class: "btn btn-outline-secondary" %>
         <%= link_to "Edit Book", edit_book_path(@book), class: "btn btn-primary" %>
         <% if current_user&.admin? %>
-          <%= button_to "Delete Book", @book, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+          <%= button_to "Delete Book", @book, method: :delete, class: "btn btn-danger" %>
         <% end %>
       </div>
     </div>
