@@ -47,6 +47,8 @@
 
     <div class="col-lg-4">
       <div class="card mb-4">
+        <% if @book.available_copy_count.positive? %>
+
         <div class="card-header"><h5 class="mb-0">Issue this book</h5></div>
         <div class="card-body">
           <%= form_with url: search_member_borrowings_path, method: :get, data: { turbo_frame: "member_check" } do |f| %>
@@ -62,6 +64,8 @@
             <%= f.submit "Search & Verify Member", class: "btn btn-outline-primary w-100" %>
           <% end %>
         </div>
+
+ <% end %>
       </div>
 
       <%= turbo_frame_tag "member_check" do %>

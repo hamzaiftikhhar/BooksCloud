@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   # Book Management
   resources :books do
     collection do
-      get :search
-      get :search_authors
+      get :search # /books/search
+      get :search_authors # /books/search_authors when on the books show page
     end
   end
 
@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       patch :suspend
       patch :reactivate
     end
-    resources :borrowing_history, only: [ :index ]
+    resources :borrowing_history, only: [ :index ] # why it is /borrowings and not members/borrowings
   end
 
   # Borrowing Management
@@ -49,7 +49,7 @@ Rails.application.routes.draw do
 
   # Reports
   namespace :reports do
-    root "dashboard#index"
+    root "dashboard#index" # reports dashboard
     get "most_borrowed_books", to: "dashboard#most_borrowed_books"
     get "overdue_members", to: "dashboard#overdue_members"
     get "financial_summary", to: "dashboard#financial_summary"
@@ -58,7 +58,7 @@ Rails.application.routes.draw do
 
   # Admin Panel
   namespace :admin do
-    root "dashboard#index"
+    root "dashboard#index" # users dashboard
     resources :users, only: [ :index, :show, :create, :destroy ] do
       member do
         patch :change_role
