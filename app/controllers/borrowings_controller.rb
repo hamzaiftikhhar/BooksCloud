@@ -15,12 +15,14 @@
 
       book = Book.find(params[:book_id])
 
-      borrowing = BorrowingService.new(member: member, book: book).execute
+      BorrowingService.new(member: member, book: book).execute
 
-      redirect_to borrowing, notice: "Book issued successfully."
+      redirect_back fallback_location: borrowings_path,
+                    notice: "Book has been issued."
 
     rescue StandardError => e
-      redirect_back fallback_location: borrowings_path, alert: e.message
+      redirect_back fallback_location: borrowings_path,
+                    alert: e.message
     end
 
     def search_member

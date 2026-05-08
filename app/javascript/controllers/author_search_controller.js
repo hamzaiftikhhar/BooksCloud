@@ -1,86 +1,65 @@
-// js/controllers/author_search_controller.js
-
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = [ "input", "suggestions", "authorId" ]
+  static targets = ["input", "suggestions", "authorId"]
 
   connect() {
-    console.log("AuthorSearch controller connected ✓")
-    this.debounceTimer = null
-    this.debounceDelay = 250
+    this.timeout = null
   }
 
-  search(event) {
-    clearTimeout(this.debounceTimer)
+  search() {
+    clearTimeout(this.timeout)
 
     const query = this.inputTarget.value.trim()
-    console.log(`Search triggered: "${query}"`)
-    
+
     if (query.length < 2) {
-      console.log("Query too short, hiding suggestions")
-      this.suggestionsTarget.style.display = 'none'
+      this.suggestionsTarget.innerHTML = ""
+      this.suggestionsTarget.style.display = "none"
       return
     }
 
-    console.log(`Debouncing for ${this.debounceDelay}ms...`)
-    this.debounceTimer = setTimeout(() => {
-      console.log(`Fetching authors for: "${query}"`)
+    this.timeout = setTimeout(() => {
       this.fetchAuthors(query)
-    }, this.debounceDelay)
+    }, 300)
   }
 
-  fetchAuthors(query) {
-    const url = `/books/search_authors?q=${encodeURIComponent(query)}`
-    console.log(`Fetching from: ${url}`)
-    
-    fetch(url, {
-      headers: { Accept: "application/json" }
-    })
-      .then(r => {
-        console.log(`Response status: ${r.status}`)
-        return r.json()
-      })
-      .then(data => {
-        console.log(`Authors data:`, data)
-        this.renderSuggestions(data)
-      })
-      .catch(err => {
-        console.error("Fetch error:", err)
-        this.suggestionsTarget.style.display = 'none'
-      })
+  async fetchAuthors(query) {
+    try {
+      const response = await fetch(
+        `/books/search_authors?q=${encodeURIComponent(query)}`,
+        { headers: { Accept: "application/json" } }
+      )
+
+      const authors = await response.json()
+      this.renderSuggestions(authors)
+
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   renderSuggestions(authors) {
     const box = this.suggestionsTarget
     box.innerHTML = ""
 
-    if (!authors || !authors.length) {
-      console.log("No authors found")
+    if (authors.length === 0) {
       box.style.display = "none"
       return
     }
 
-    console.log(`Rendering ${authors.length} suggestions`)
-    authors.forEach(a => {
-      const div = document.createElement("div")
-      div.textContent = a.name
-      div.style.cursor = "pointer"
-      div.className = 'p-2 suggestion-item border-bottom'
-      div.style.padding = '8px 12px'
-      div.style.borderBottom = '1px solid #ddd'
+    authors.forEach(author => {
+      const item = document.createElement("div")
 
-      div.onmouseover = () => { div.style.backgroundColor = '#f5f5f5' }
-      div.onmouseout = () => { div.style.backgroundColor = 'transparent' }
+      item.textContent = author.name
+      item.className = "p-2 border-bottom suggestion-item"
 
-      div.onclick = () => {
-        console.log(`Selected author: ${a.name} (ID: ${a.id})`)
-        this.inputTarget.value = a.name
-        this.authorIdTarget.value = a.id
+      item.addEventListener("click", () => {
+        this.inputTarget.value = author.name
+        this.authorIdTarget.value = author.id
         box.style.display = "none"
-      }
+      })
 
-      box.appendChild(div)
+      box.appendChild(item)
     })
 
     box.style.display = "block"

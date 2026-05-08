@@ -1,4 +1,4 @@
-  class BookSearch # this is for the simple search bar where we can search by
+  class BookSearch # we can search by
     def initialize(scope = Book.all, query: nil, genre: nil, availability: nil)
       @scope = scope
       @query = query&.strip

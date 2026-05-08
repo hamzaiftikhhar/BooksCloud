@@ -1,7 +1,9 @@
 class Fine < ApplicationRecord
   belongs_to :borrowing
   delegate :member, :book, to: :borrowing
-
+  # without delegate i would need
+  # fine.borrowing.member
+  # fine.borrowing.book
   enum :status, { outstanding: "outstanding", paid: "paid" } # this is also string in database
 
   validates :borrowing_id, :amount_due, :status, presence: true

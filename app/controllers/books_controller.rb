@@ -2,10 +2,10 @@ class BooksController < ApplicationController
   before_action :set_book, only: %i[show edit update destroy]
 
   def index
-    @books = Book.all.page(params[:page]).per(10)
+    @books = Book.all.page(params[:page]).per(10) # Show all books with pagination /books?page=2
 
-    if params[:q].present? || params[:genre].present? || params[:availability].present?
-      @books = BookSearch.new(
+    if params[:q].present? || params[:genre].present? || params[:availability].present? # conditional search
+      @books = BookSearch.new( # create new service object
         Book.includes(:author),
         query: params[:q],
         genre: params[:genre],
@@ -20,7 +20,7 @@ class BooksController < ApplicationController
   end
 
   def show
-    @members = Member.active.order(:name) # why
+    @members = Member.active.order(:name) # why scope :active, ->{status: active}
   end
 
   def new
@@ -80,14 +80,13 @@ end
       redirect_to @book, alert: "Only admins can delete books."
     end
   end
+
   def handle_author_creation(book)
     return if params[:book][:author_id].present?
-
     return if params[:book][:author_name].blank?
 
     author_name = params[:book][:author_name].strip
     first_name, last_name = author_name.split(" ", 2)
-
     last_name ||= first_name
 
     author = Author.find_or_create_by(
@@ -98,10 +97,17 @@ end
     book.author_id = author.id
   end
 
+  private
+
+  def set_book
+    @book = Book.find(params[:id])
+  end
+
   def book_params
     params.require(:book).permit(
       :title,
       :author_id,
+      :author_name,
       :isbn,
       :genre,
       :description,
@@ -109,12 +115,6 @@ end
       :total_copy_count,
       :available_copy_count,
       :cover,
-    )
+    ).except(:author_name)
   end
-end
-
-private
-
-def set_book
-  @book = Book.find(params[:id])
 end

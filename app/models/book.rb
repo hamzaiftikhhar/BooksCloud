@@ -25,31 +25,6 @@ class Book < ApplicationRecord
   validates :total_copy_count, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :available_copy_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
-  # validate :isbn_format
-
-  # def isbn_format
-  #   return if isbn.blank?
-
-  #   # Remove any hyphens or spaces
-  #   clean_isbn = isbn.gsub(/[-\s]/, "")
-
-  #   if clean_isbn.match?(/\A\d{13}\z/) && (clean_isbn.start_with?("978") || clean_isbn.start_with?("979"))
-  #     # ISBN-13 validation
-  #     # Simple check: all digits
-  #     unless clean_isbn.match?(/\A\d{13}\z/)
-  #       errors.add(:isbn, "ISBN-13 must be 13 digits")
-  #     end
-  #   elsif clean_isbn.match?(/\A\d{9}[\dX]\z/)
-  #     # ISBN-10 validation
-  #     # Last character can be X
-  #     unless clean_isbn.match?(/\A\d{9}[\dX]\z/)
-  #       errors.add(:isbn, "ISBN-10 must be 10 characters (digits or X)")
-  #     end
-  #   else
-  #     errors.add(:isbn, "ISBN must be 10 or 13 digits, starting with 978 or 979 for ISBN-13")
-  #   end
-  # end
-
   validate :publication_date_not_in_future
 
   def publication_date_not_in_future
