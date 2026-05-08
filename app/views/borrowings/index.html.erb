@@ -34,6 +34,12 @@
       </tbody>
     </table>
   </div>
+  <div class="mt-4 pagination-wrapper mb-5">
+  <%= paginate @borrowings if @borrowings.respond_to?(:total_pages) %>
+</div>
+
 <% else %>
   <p class="text-muted">No borrowings have been recorded yet.</p>
 <% end %>
+
+

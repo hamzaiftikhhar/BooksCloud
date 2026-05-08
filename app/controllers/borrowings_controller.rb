@@ -17,8 +17,7 @@
 
       BorrowingService.new(member: member, book: book).execute
 
-      redirect_back fallback_location: borrowings_path,
-                    notice: "Book has been issued."
+      redirect_back fallback_location: borrowings_path, notice: "Book has been issued."
 
     rescue StandardError => e
       redirect_back fallback_location: borrowings_path,

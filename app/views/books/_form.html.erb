@@ -23,7 +23,7 @@
     <%= form.label :isbn, class: "mb-0 mr-2" %>
     <button type="button" class="btn btn-link p-0 text-decoration-none" 
             data-bs-toggle="tooltip" data-bs-placement="top" 
-            title="Enter the 10 or 13-digit number found on the book's back cover or copyright page. (e.g., 9783161484100 or 0306406152)">
+            title="Enter the 10 (can end with X) or 13-digit number found on the book's back cover or copyright page.">
       <i class="bi bi-info-circle"> i</i>
     </button>
   </div>
@@ -34,7 +34,7 @@
 
   <div class="mb-3">
     <%= form.label :description %>
-    <%= form.text_area :description, rows: 4, class: "form-control" %>
+    <%= form.text_area :description, rows: 4, class: "form-control"%>
   </div>
 
 
@@ -44,31 +44,33 @@
      <%= form.select :genre,
       Book.genres.keys.map { |g| [g.humanize, g] },
       { prompt: "Select Genre" },
-      class: "form-select select2" %>   
+      class: "form-select" %>   
 </div>
 
-<div data-controller="author-search">
-  <div class="mb-3">
-    <label for="book_author_name">Author Name</label>
-    <div class="position-relative">
-      <input class="form-control"
-             placeholder="e.g. J.R.R. Tolkien"
-             autocomplete="off"
-             type="text"
-             name="book[author_name]"
-             id="book_author_name"
-             data-author-search-target="input"
-             data-action="input->author-search#search" />
+  <div data-controller="author-search">
+    <div class="mb-3">
+      <label for="book_author_name">Author Name</label>
+      <div class="position-relative">
+        <input class="form-control"
+              placeholder="e.g. J.R.R. Tolkien"
+              autocomplete="off"
+              value="<%= @book.author&.name %>"
+              type="text"
+              name="book[author_name]"
+              id="book_author_name"
+              data-author-search-target="input"
+              data-action="input->author-search#search" />
 
-      <div class="position-absolute w-100 mt-1 bg-white border rounded shadow-sm"
-           style="display: none; max-height: 300px; overflow-y: auto; z-index: 1000;"
-           data-author-search-target="suggestions">
+        <div class="position-absolute w-100 mt-1 bg-white border rounded shadow-sm"
+            style="display: none; max-height: 300px; overflow-y: auto; z-index: 1000;"
+            data-author-search-target="suggestions">
+        </div>
       </div>
+      <small class="text-muted">Start typing to search authors or create a new one.</small>
     </div>
-    <small class="text-muted">Start typing to search authors or create a new one.</small>
+    <input id="selected_author_id" type="hidden" name="book[author_id]" data-author-search-target="authorId" />
   </div>
-  <input id="selected_author_id" type="hidden" name="book[author_id]" data-author-search-target="authorId" />
-</div>
+
   <div class="mb-3">
     <%= form.label :publication_date %>
     <%= form.date_field :publication_date, class: "form-control" %>
