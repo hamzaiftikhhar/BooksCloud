@@ -1,6 +1,4 @@
 class DashboardController < ApplicationController
-  require_relative "../queries/most_borrowed_books_query"
-
   def index
     @books_count = Book.count
     @members_count = Member.count

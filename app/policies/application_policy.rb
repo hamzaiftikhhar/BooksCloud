@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class ApplicationPolicy
-  attr_reader :user, :record # It creates getter methods for instance variables.
+  attr_reader :user, :record # shortcut to access instance variables. It creates getter methods for instance variables.
 
   def initialize(user, record)
-    @user = user
-    @record = record
+    @user = user # user (who is logged in)
+    @record = record # record (model being accessed)
   end
 
   def index?
@@ -40,7 +40,7 @@ class ApplicationPolicy
     user&.admin?
   end
 
-  class Scope
+  class Scope # Scope defines WHICH records a user is allowed to SEE- Not actions
     def initialize(user, scope)
       @user = user
       @scope = scope
@@ -55,3 +55,37 @@ class ApplicationPolicy
     attr_reader :user, :scope
   end
 end
+
+
+# rough
+
+# Policy means-> can you DO something?
+
+# Examples:
+
+# create member?
+# delete member?
+# update member?
+
+# Scope -> what CAN you SEE?
+
+# Examples:
+
+# class Scope
+#   def resolve
+#     @scope.all
+#   end
+# end
+
+
+# another case
+#
+# def resolve
+#   if user.admin?
+#     scope.all
+#   else
+#     scope.where(active: true)
+#   end
+# end
+
+# which members appear in index page?

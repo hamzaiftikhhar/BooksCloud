@@ -26,10 +26,20 @@ module Admin
       redirect_to admin_users_path, notice: "Staff account deleted successfully."
     end
 
-    def change_role
-      @user.update!(role: params.require(:role))
+    # def change_role
+    #   @user.update!(role: params.require(:role))
 
-      redirect_to admin_user_path(@user), notice: "Staff role updated successfully."
+    #   redirect_to admin_user_path(@user), notice: "Staff role updated successfully."
+    # end
+
+    def change_role
+      @user = User.find(params[:id])
+      if @user.update(role_params)
+        redirect_to admin_user_path(@user), notice: "Role updated successfully."
+      else
+        # Re-render the show page or handle errors
+        render :show, status: :unprocessable_entity
+      end
     end
 
 
@@ -45,6 +55,10 @@ module Admin
 
     def user_params
       params.require(:user).permit(:email, :password, :password_confirmation, :role)
+    end
+
+    def role_params
+      params.require(:user).permit(:role)
     end
   end
 end

@@ -13,3 +13,9 @@ module Admin
     end
   end
 end
+
+# if i am not using this dasboard and can access the route:
+
+#   http://127.0.0.1:3000/admin/dashboard
+#   then can I remvoe hte
+# end
