@@ -9,11 +9,11 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :role, presence: true
 
-  def admin?
-    role == "admin"
-  end
+  # def admin?
+  #   role == "admin"
+  # end
 
-  def librarian?
-    role == "librarian"
-  end
+  # def librarian?
+  #   role == "librarian"
+  # end
 end

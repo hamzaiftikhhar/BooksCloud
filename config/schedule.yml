@@ -1,0 +1,11 @@
+due_reminder_job:
+  # cron: "0 9 * * *"  # minute hour day month weekday
+  class: "DueReminderSchedulerJob"
+  queue: default
+  cron: "*/1 * * * *"
+
+# | Cron          | Meaning           |
+# | ------------- | ----------------- |
+# | `0 9 * * *`   | Every day at 9 AM |
+# | `*/5 * * * *` | Every 5 minutes   |
+# | `0 0 * * *`   | Midnight daily    |

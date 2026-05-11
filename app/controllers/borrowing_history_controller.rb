@@ -3,7 +3,7 @@ class BorrowingHistoryController < ApplicationController
 
   def index
     if @member.nil?
-      redirect_to members_path, alert: "Member not found."
+       redirect_to members_path, alert: "Member not found."
       return
     end
     @borrowings = @member.borrowings.order(created_at: :desc).page(params[:page]).per(10)

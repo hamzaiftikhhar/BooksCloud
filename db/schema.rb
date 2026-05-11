@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_05_133414) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_11_091816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -82,6 +82,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_05_133414) do
     t.boolean "fine_paid", default: false
     t.datetime "issue_date"
     t.integer "member_id", null: false
+    t.boolean "reminder_sent", default: false
     t.datetime "return_date"
     t.integer "status"
     t.datetime "updated_at", null: false

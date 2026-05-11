@@ -4,7 +4,7 @@ class Book < ApplicationRecord
   has_many :members, through: :borrowings
   has_many :fines, through: :borrowings
 
-  has_rich_text :description
+  # has_rich_text :description
 
   has_one_attached :cover
 
@@ -16,7 +16,7 @@ class Book < ApplicationRecord
   validate :description_presence
 
   def description_presence
-    if description.blank? || description.body.to_plain_text.strip.blank?
+    if description.blank?
       errors.add(:description, "can't be blank")
     end
   end

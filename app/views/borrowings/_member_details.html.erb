@@ -57,7 +57,7 @@
               </small>
 
               <div class="fw-bold fs-5">
-                $<%= number_with_precision(member.fines.outstanding.sum(:amount_due), precision: 2) %>
+                PKR <%= number_with_precision(member.fines.outstanding.sum(:amount_due), precision: 2) %>
               </div>
             </div>
           </div>
@@ -76,10 +76,11 @@
           <%= button_to borrowings_path(
                 book_id: book.id,
                 borrowing: {
-                  membership_number: member.membership_number
+                membership_number: member.membership_number
                 }
               ),
               method: :post,
+               form: { data: { turbo: false } },
               class: "btn btn-primary w-100" do %>
 
             Confirm & Issue

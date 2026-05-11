@@ -1,10 +1,8 @@
 <% if book.available_copy_count.positive? %>
-  <div class="alert alert-success">
-    <strong><%= book.total_copy_count %> in stock</strong>
-  </div>
+  
 <% else %>
   <div class="alert alert-warning">
-    <strong><%= book.title %> is out of stock</strong>
+    "<strong><%= book.title %></strong>" is out of stock
 
   </div>
 <% end %>

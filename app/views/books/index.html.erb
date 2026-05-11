@@ -35,7 +35,7 @@
           <h5 class="card-title font-weight-bold mb-1">
             <%= link_to book.title, book_path(book), class: "text-dark text-decoration-none" %>
           </h5>
-          <p class="text-muted small mb-3"><%= truncate(book.description.to_plain_text, length: 80) %></p>
+          <p class="text-muted small mb-3"><%= truncate(book.description, length: 80) %></p>
           <div class="mt-auto d-flex justify-content-between align-items-center">
             <span class="badge rounded-pill bg-light text-dark border">
               Available: <%= book.available_copy_count %>
@@ -50,7 +50,7 @@
 
 
 
-<div class="mt-4 pagination-wrapper mb-5">
+<div class="mt-4 pagination">
   <%= paginate @books if @books.respond_to?(:total_pages) %>
 </div>
 

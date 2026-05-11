@@ -49,3 +49,55 @@
   background-color: #ff4d6d;
   color: #fff;
 }
+
+/* Container */
+.pagination {
+  display: inline-block;
+  padding: 10px;
+}
+
+/* Base Link Style */
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+}
+
+/* Hover Effect for Non-Active Links */
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+}
+
+/* Active/Current Page Style */
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+/* Optional: Rounded Corners */
+.pagination a:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.pagination a:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse; /* Removes gaps between cell borders */
+  font-family: Arial, sans-serif;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd; /* Adds a light border to all cells */
+  padding: 12px;
+  text-align: left;
+}

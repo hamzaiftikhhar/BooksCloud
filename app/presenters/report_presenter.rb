@@ -28,7 +28,7 @@ class ReportPresenter
   end
 
   def financial_summary
-    outstanding_fines = Fine.outstanding.sum(:amount_due)
+    outstanding_fines = Fine.outstanding.sum(:amount_due) # quering the Fine Modal (then database)
     paid_fines = Fine.paid.sum(:amount_paid)
 
     {

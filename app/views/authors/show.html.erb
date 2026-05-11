@@ -9,7 +9,9 @@
     <%= link_to "Add New Book", new_book_path, class: "btn btn-outline-primary" %>
     <%= link_to "Back to Authors", authors_path, class: "btn btn-outline-secondary" %>
     <%= link_to "Edit", edit_author_path(@author), class: "btn btn-outline-warning" %>
-    <%= link_to "Delete", author_path(@author), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger" %>
+     <% if current_user&.admin? %>
+          <%= button_to "Delete Author", @author ,data: { turbo_confirm: "Remove this author ?" }, method: :delete, class: "btn btn-danger" %>
+        <% end %>
   </div>
 </div>
 
