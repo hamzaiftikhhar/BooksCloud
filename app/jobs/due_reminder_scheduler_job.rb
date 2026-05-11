@@ -16,6 +16,7 @@ class DueReminderSchedulerJob < ApplicationJob
     end
   end
 end
+
 # it will do
 
 # finds borrowings due in 3 days
