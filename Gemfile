@@ -55,6 +55,10 @@ gem "redis"
 
 gem "letter_opener" # Local Email Testing
 
+# test cases using rspecs
+group :development, :test do
+  gem "rspec-rails", "~> 7.0"
+end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
