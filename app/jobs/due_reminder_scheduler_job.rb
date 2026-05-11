@@ -1,3 +1,4 @@
+# this clas will store the job in the redis after quering the database
 class DueReminderSchedulerJob < ApplicationJob
   queue_as :default
 
@@ -12,7 +13,12 @@ class DueReminderSchedulerJob < ApplicationJob
 
     borrowings.find_each do |borrowing|
       DueReminderJob.perform_later(borrowing)
-      borrowing.update!(reminder_sent: true)
+      # 1)Active Job serializes the job data, 2) then converts borrowing into an ID, 3) Pushes job payload into Redis queue, 4)Sidekiq later fetches it
+      # {
+      #   "job_class":"DueReminderJob",
+      #   "arguments":[12],   // 12 is the borrowing.id
+      #   "queue":"default"
+      # }
     end
   end
 end
