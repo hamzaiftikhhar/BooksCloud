@@ -1,3 +1,4 @@
+# this is the class that will be run after the sidekiq worker will pull job from the Redis
 class DueReminderJob < ApplicationJob
   queue_as :default
 

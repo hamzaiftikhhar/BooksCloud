@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  devise_for :users
-require "sidekiq/web"
+  require "sidekiq/web"
 
-mount Sidekiq::Web => "/sidekiq"
+  devise_for :users
+
   root "dashboard#index"
 
   # Book Management
@@ -13,6 +13,9 @@ mount Sidekiq::Web => "/sidekiq"
     end
   end
 
+  require "sidekiq/web"
+
+  mount Sidekiq::Web => "/sidekiq"
   # Author Management
   resources :authors
 
