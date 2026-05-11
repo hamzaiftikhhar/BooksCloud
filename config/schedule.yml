@@ -1,8 +1,8 @@
 due_reminder_job:
-  # cron: "0 9 * * *"  # minute hour day month weekday
+  cron: "0 9 * * *"  # minute hour day month weekday
   class: "DueReminderSchedulerJob"
   queue: default
-  cron: "*/1 * * * *"
+  # cron: "*/1 * * * *" #every minute
 
 # | Cron          | Meaning           |
 # | ------------- | ----------------- |
