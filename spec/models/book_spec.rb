@@ -13,4 +13,8 @@ RSpec.describe Book, type: :model do
 
     expect(book).not_to be_valid
   end
+
+  RSpec.describe Book, type: :model do
+  it { should belong_to(:author) }
+  end
 end
