@@ -5,21 +5,11 @@ RSpec.describe Book, type: :model do
   it { should validate_presence_of(:title) }
   it { should validate_presence_of(:isbn) }
   it { should validate_presence_of(:description) }
+  it { should validate_presence_of(:total_copy_count) }
+  it { should validate_presence_of(:available_copy_count) }
 
   it "is valid with valid attributes" do
-    author = Author.create!(first_name: "J.K", last_name: "Rowling")
-
-    book = Book.new(
-      title: "Atomic Habits",
-      author_id: author.id,
-      isbn: "9783161484100",
-      description: "Good book",
-      publication_date: Date.current,
-      total_copy_count: 10,
-      available_copy_count: 10,
-      genre: 3
-    )
-
+    book = build(:book)
     expect(book).to be_valid
   end
 
@@ -28,5 +18,13 @@ RSpec.describe Book, type: :model do
     book = Book.new(title: nil)
 
     expect(book).not_to be_valid
+  end
+
+  describe "#overdue?" do
+    it "returns true for past due dates" do
+    borrowing = Borrowing.new(due_date: 1.day.ago)
+
+    expect(borrowing.overdue?).to eq(true)
+   end
   end
 end
