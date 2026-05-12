@@ -1,4 +1,4 @@
-
+# To generate reusable test data objects.
 FactoryBot.define do
   factory :user do
     email { Faker::Internet.email }
