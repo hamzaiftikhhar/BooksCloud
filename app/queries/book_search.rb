@@ -1,5 +1,5 @@
 class BookSearch
-  def self.call(query, genre: nil, availability: nil)
+  def self.call(query, genre: nil, availability: nil) # Service Object Pattern. we created it for RSpecs
     new(query: query, genre: genre, availability: availability).execute
   end
 

@@ -12,6 +12,10 @@ class BooksController < ApplicationController
         availability: params[:availability]
       ).execute.page(params[:page]).per(10)
     end
+    respond_to do |format|
+    format.html
+    format.json { render json: @books }# for RSpecs so it can get the json rather than the HTML response
+  end
   end
 
   def search

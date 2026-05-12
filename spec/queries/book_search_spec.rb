@@ -9,3 +9,4 @@ RSpec.describe BookSearch do
     end
   end
 end
+
