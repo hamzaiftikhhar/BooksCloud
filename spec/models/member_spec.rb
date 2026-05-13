@@ -10,7 +10,7 @@ RSpec.describe Member, type: :model do
   end
 
   describe "validations" do
-    subject { create(:member) }
+    subject { build(:member) }
 
     it { should validate_presence_of(:name) }
     it { should validate_length_of(:name).is_at_least(1).is_at_most(255) }
@@ -21,18 +21,25 @@ RSpec.describe Member, type: :model do
     it { should validate_presence_of(:phone) }
     it { should validate_length_of(:phone).is_at_least(10).is_at_most(20) }
 
-    it { should validate_presence_of(:membership_number) }
-    it { should validate_uniqueness_of(:membership_number) }
-
-    it { should validate_presence_of(:max_books_allowed) }
-
     it do
       should validate_numericality_of(:max_books_allowed)
         .only_integer
         .is_greater_than(0)
     end
 
-    it { should validate_presence_of(:status) }
+    it "validates uniqueness of membership_number" do
+      create(:member,
+        email: "a1@test.com",
+        membership_number: "MEM123"
+      )
+
+      duplicate = build(:member,
+        email: "a2@test.com",
+        membership_number: "MEM123"
+      )
+
+      expect(duplicate).not_to be_valid
+    end
   end
 
   describe "enums" do

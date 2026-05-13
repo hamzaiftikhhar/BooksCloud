@@ -6,5 +6,6 @@ FactoryBot.define do
     sequence(:email) { |n| "member#{n}@test.com" }
     status { "active" }
     phone { "03556565734" }
+    membership_number { nil }
   end
 end

@@ -38,15 +38,20 @@ before_validation :set_default_status, on: :create
 
   private
 
+
   def generate_membership_number
+    return if membership_number.present?
+
     self.membership_number = "MEM#{Time.current.strftime('%Y%m%d%H%M%S')}#{SecureRandom.hex(4)}"
   end
-
   def set_default_borrow_limit
-    self.max_books_allowed ||= LibraryConstants::DEFAULT_BORROW_LIMIT ||= 3
+    return if max_books_allowed.present?
+
+    self.max_books_allowed =
+      LibraryConstants::DEFAULT_BORROW_LIMIT || 3
   end
 
   def set_default_status
-    self.status ||= statuses[:active]
+    self.status ||= :active
   end
 end
