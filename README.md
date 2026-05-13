@@ -1,76 +1,88 @@
-📚 Book Cloud
+# 📚 Book Cloud
 
-A modern Library Management System built with Ruby on Rails that streamlines book borrowing, member management, fines, and library operations with clean architecture and scalable design.
+A modern **Library Management System** built with Ruby on Rails that streamlines book borrowing, member management, fines, and library operations using a clean, service-oriented architecture.
 
-✨ Features
+---
 
-📖 Book Management
+## ✨ Features
 
-Add, update, and manage books
-Track available copies in real-time
-Automatic inventory updates on borrowing/return
+### 📖 Book Management
+- Add, update, and manage books  
+- Real-time tracking of available copies  
+- Automatic inventory updates on borrow/return  
 
-👤 Member System
+---
 
-Member registration with unique membership numbers
-Borrowing limits per member
-Status control (active / suspended / expired)
+### 👤 Member System
+- Member registration with unique membership numbers  
+- Borrowing limits per member  
+- Status control: active / suspended / expired  
 
-🔄 Borrowing System
+---
 
-Issue and return books
-Automatic due date calculation
-Borrowing history tracking
+### 🔄 Borrowing System
+- Issue and return books  
+- Automatic due date calculation  
+- Full borrowing history tracking  
 
-⏰ Overdue Handling
+---
 
-Detect overdue borrowings
-Calculate overdue duration
-Support for fine generation
+### ⏰ Overdue Handling
+- Detect overdue borrowings automatically  
+- Calculate overdue duration  
+- Foundation for fine generation  
 
-💰 Fine Management
+---
 
-Automatic fine tracking
-Partial & full payments
-Outstanding vs paid status
+### 💰 Fine Management
+- Automatic fine tracking  
+- Partial and full payments supported  
+- Status: outstanding / paid  
 
-⚙️ Background Logic
+---
 
-Service object-based architecture
-Clean separation of concerns
-Transaction-safe operations
+## ⚙️ Architecture Highlights
 
-🧠 Tech Stack
-🟣 Ruby 3.x
-💎 Ruby on Rails 8+
-🐘 PostgreSQL
-🧪 RSpec (Testing)
-🏭 FactoryBot
-🔥 Shoulda Matchers
-⚡ Sidekiq (if used for jobs)
-📦 Redis (for background jobs / caching)
-🏗️ Architecture Overview
+- Service Object pattern for business logic  
+- Clean separation of concerns  
+- Transaction-safe operations  
+- Query objects for optimized reads  
+- Enum-based state management  
+- Delegation for cleaner associations  
 
-This project follows a clean Rails architecture:
+---
 
-Models → Business Rules
-Services → Complex Workflows
-Controllers → Request Handling
-Specs → Full Test Coverage
-Key Design Decisions:
-Service Objects for borrowing logic
-Enum-based status handling
-Delegation for clean associations
-Transaction-safe database operations
-Scopes for query optimization
+## 🧠 Tech Stack
 
-📂 Project Structure
+- Ruby 3.x  
+- Ruby on Rails 8+  
+- PostgreSQL  
+- RSpec  
+- FactoryBot  
+- Shoulda Matchers  
+- Sidekiq (background jobs)  
+- Redis  
 
+---
+
+## 🏗️ Architecture Overview
+
+- **Models** → Business logic  
+- **Services** → Complex workflows  
+- **Controllers** → Request handling  
+- **Queries** → Optimized database reads  
+- **Jobs** → Background processing  
+- **Policies** → Authorization rules  
+- **Specs** → Full test coverage  
+
+---
+
+## 📂 Project Structure
+
+```bash
 app/
 ├── controllers/
 │   ├── admin/
-│   │   ├── dashboard_controller.rb
-│   │   └── users_controller.rb
 │   ├── books_controller.rb
 │   ├── authors_controller.rb
 │   ├── members_controller.rb
@@ -79,17 +91,14 @@ app/
 │   ├── dashboard_controller.rb
 │   ├── borrowing_history_controller.rb
 │   └── reports/
-│       └── dashboard_controller.rb
 │
 ├── models/
-│   ├── application_record.rb
 │   ├── book.rb
 │   ├── author.rb
 │   ├── member.rb
 │   ├── borrowing.rb
 │   ├── fine.rb
-│   ├── user.rb
-│   └── concerns/
+│   └── user.rb
 │
 ├── services/
 │   ├── borrowing_service.rb
@@ -111,138 +120,94 @@ app/
 │   └── reminder_mailer.rb
 │
 ├── policies/
-│   ├── application_policy.rb
 │   ├── book_policy.rb
 │   ├── member_policy.rb
 │   ├── borrowing_policy.rb
 │   └── fine_policy.rb
 │
 ├── presenters/
-│   └── report_presenter.rb
-│
 ├── exceptions/
-│   └── borrowing_errors.rb
-│
 ├── constants/
-│   └── library_constants.rb
-│
-├── javascript/
-│   └── controllers/
-│       ├── application.js
-│       ├── index.js
-│       └── author_search_controller.js
-│
-├── views/
-│   ├── books/
-│   ├── authors/
-│   ├── members/
-│   ├── borrowings/
-│   ├── fines/
-│   ├── dashboard/
-│   ├── reports/
-│   ├── borrowing_history/
-│   ├── admin/
-│   └── layouts/
-│
-├── assets/
-│   ├── stylesheets/
-│   └── images/
-│
-└── helpers/
-    └── application_helper.rb
-
-
-⚙️ Config & Infrastructure
-
-config/
-├── routes.rb
-├── database.yml
-├── puma.rb
-├── schedule.yml
-├── storage.yml
-├── cable.yml
-├── environments/
-└── initializers/
+└── views/
 
 
 
 🔄 Core Workflow
 
-Borrow Book Flow
+📘 Borrow Book Flow
+
+
 Member requests a book
 BorrowingService validates:
 Member status
 Borrow limit
 Book availability
-Borrowing is created
-Book inventory is reduced
-Due date is set automatically
+Borrowing record is created
+Book inventory is updated
+Due date is assigned automatically
 
 
 ⚠️ Business Rules
-
-❌ Suspended members cannot borrow
-❌ Expired members cannot borrow
-❌ Members cannot exceed borrow limit
-❌ Books must have available copies
-⏰ Overdue borrowings are tracked automatically
+Suspended members cannot borrow
+Expired members cannot borrow
+Borrow limit must not be exceeded
+Books must have available copies
+Overdue borrowings are tracked automatically
 
 
 🧪 Testing
 
-This project is fully tested using RSpec.
-
 Run tests:
+
 bundle exec rspec
-Coverage includes:
+Includes:
 Model validations
 Associations
 Scopes
 Callbacks
-Service objects
+Services
 Business logic
 
-📊 Example Domain Logic
 
-Overdue Check
+📊 Sample Domain Logic
 def overdue?
   return false unless due_date.present?
   return false if returned?
 
   Date.current > due_date
 end
-Borrow Limit Check
 def can_borrow?
   active? && active_borrowings.count < max_books_allowed
 end
 
 
-🚀 Getting Started
-
-1. Clone repo
+🚀 Setup Instructions
 git clone https://github.com/your-username/book-cloud.git
 cd book-cloud
-2. Install dependencies
 bundle install
-3. Setup database
 rails db:create
 rails db:migrate
 rails db:seed
-4. Run server
 rails server
 
 
 📌 Future Improvements
-📲 Notification system (email/SMS reminders)
-📈 Admin dashboard analytics
-🔍 Advanced search filters
-📦 Docker support
-☁️ Cloud deployment (Render / AWS)
-🔐 Role-based authorization improvements
+Email / SMS notifications
+Admin analytics dashboard
+Advanced search filters
+Docker support
+Cloud deployment (AWS / Render)
+Role-based authorization
+
+
 👨‍💻 Author
 
-Built with 💙 by a developer passionate about clean architecture and scalable backend systems.
+Built with 💙 by a developer focused on clean architecture and scalable backend systems.
 
-⭐ If you like this project
+⭐ Support
 
-Give it a star ⭐ and feel free to contribute or fork it.
+If you like this project:
+
+⭐ Star it
+🍴 Fork it
+🤝 Contribute
