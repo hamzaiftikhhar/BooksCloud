@@ -37,12 +37,12 @@ RSpec.describe Fine, type: :model do
     end
   end
 
-  describe "enums" do
-    it do
-      should define_enum_for(:status)
-        .with_values(outstanding: "outstanding", paid: "paid")
+    describe "enums" do
+      it do
+        expect(Fine.statuses.keys).to contain_exactly("outstanding", "paid")
+      end
     end
-  end
+
 
   describe "scopes" do
     let!(:outstanding_fine) { create(:fine, status: :outstanding) }
