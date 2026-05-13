@@ -8,6 +8,15 @@ class Book < ApplicationRecord
 
   has_one_attached :cover
 
+  validate :cover_format
+
+  def cover_format
+    return unless cover.attached?
+
+    if !cover.content_type.in?(%w[image/jpeg image/png image/webp])
+      errors.add(:cover, "must be JPG, PNG, or WEBP")
+    end
+  end
 
   validates :title, presence: true, length: { minimum: 1, maximum: 255 }
   validates :isbn, presence: true, uniqueness: true, format: { with: /\A(?:\d{9}[\dX]|\d{13})\z/,

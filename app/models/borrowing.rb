@@ -5,26 +5,34 @@ class Borrowing < ApplicationRecord
 
   enum :status, { active: 0, returned: 1 }
 
-  validates :member_id, :book_id, :due_date, presence: true
+  validates :member_id, :book_id, presence: true
   validates :status, presence: true
-
+  validates :due_date, presence: true, on: :update
   scope :active, -> { where(status: statuses[:active]) }
   scope :returned, -> { where(status: statuses[:returned]) }
-  scope :overdue, -> { active.where("due_date < ?", Date.current) }
-
+  scope :overdue, -> { active.where("return_date IS NULL AND due_date < ? OR return_date > due_date", Date.current) }
   before_create :set_issue_date
   before_create :set_due_date # is this callback or validation?
 
   def overdue?
     return false unless due_date.present?
 
-    comparison_date = return_date&.to_date || Date.current
-    comparison_date > due_date
+    if return_date.present?
+      return return_date.to_date > due_date.to_date
+    end
+
+    Date.current > due_date
   end
 
   def days_overdue
-    return 0 unless overdue?
-    (Date.current - due_date).to_i
+    return 0 unless due_date.present?
+
+    end_date = return_date&.to_date || Date.current
+    due = due_date.to_date
+    binding
+    return 0 if end_date <= due
+
+    (end_date - due).to_i
   end
 
   def mark_as_returned(returned_date = Time.current)
