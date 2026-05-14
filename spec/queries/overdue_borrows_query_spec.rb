@@ -25,7 +25,8 @@ RSpec.describe OverdueBorrowsQuery do
         due_date: 5.days.from_now
       )
 
-      result = described_class.call
+      result = described_class.call # it is calling RSpec.describe OverdueBorrowsQuery do
+
 
       expect(result).to include(overdue_member)
       expect(result).not_to include(normal_member)
