@@ -61,7 +61,13 @@ A modern **Library Management System** built with Ruby on Rails that streamlines
 - FactoryBot  
 - Shoulda Matchers  
 - Sidekiq (background jobs)  
-- Redis  
+- Redis
+- Advise
+- Pundit
+- AWS
+- JS
+- Bootstrap
+- Ruby Gems 
 
 ---
 

@@ -17,43 +17,67 @@ RSpec.describe ReportPresenter do
       expect(result[:total_fines]).to eq(150)
     end
   end
-
+    
   describe "#most_borrowed_books" do
     it "returns formatted most borrowed books" do
       author = create(:author, first_name: "John", last_name: "Doe")
-      book = create(:book, author: author, isbn: "123456789X")
 
-      # assuming borrow_count comes from query or method
-      allow(book).to receive(:borrow_count).and_return(5)
+      book = create(
+        :book,
+        author: author,
+        isbn: "123456789X"
+      )
+
+      book.define_singleton_method(:borrow_count) { 5 }
+
+      allow(MostBorrowedBooksQuery)
+        .to receive(:call)
+        .and_return([book])
 
       result = presenter.most_borrowed_books
 
       expect(result.first).to include(
-        :title,
-        :author,
-        :isbn,
-        :borrow_count
+        title: book.title,
+        author: "#{author.first_name} #{author.last_name}",
+        isbn: book.isbn,
+        borrow_count: 5
       )
     end
   end
 
   describe "#overdue_members" do
     it "returns formatted overdue members" do
-      member = create(:member,
+      member = create(
+        :member,
         name: "Ali",
         email: "ali@test.com",
         membership_number: "M123"
       )
 
-      allow(member).to receive_message_chain(:overdue_borrowings, :count).and_return(3)
+      allow(member) #create mock/stub
+       .to receive_message_chain(:overdue_borrowings, :count) #When code runs:  member.overdue_borrowings.count
+       .and_return(3)
+
+
+
+      allow(OverdueBorrowsQuery)
+        .to receive(:call)
+        .and_return([member]) #return fake data
+
+        # Because presenter probably fetches data through query object.
+
+        # Without this:
+
+        # presenter uses real DB query
+        # your mocked member may never appear
 
       result = presenter.overdue_members
 
       expect(result.first).to include(
-        :name,
-        :email,
-        :membership_number,
-        :overdue_count
+        name: "Ali",
+        email: "ali@test.com",
+        membership_number: "M123",
+        overdue_count: 3
       )
     end
   end
