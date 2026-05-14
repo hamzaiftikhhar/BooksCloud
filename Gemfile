@@ -57,7 +57,7 @@ gem "letter_opener" # Local Email Testing
 
 # test cases using rspecs
 group :development, :test do
-  gem "rspec-rails", "~> 7.0"
+  gem "rspec-rails", "~> 8.0"
 end
 
 # test for the association
