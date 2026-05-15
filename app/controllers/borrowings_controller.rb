@@ -42,7 +42,7 @@
     private
 
     def set_borrowing
-      @borrowing = Borrowing.find_by(id: params[:id])
+      @borrowing = Borrowing.find(params[:id])
     end
 
     def borrowing_params

@@ -24,7 +24,7 @@ RSpec.describe MonthlyBorrowingCountQuery do
 
     it "does not include borrowings from another year" do
       create_list(
-        :borrowing, 
+        :borrowing,
         5,
         created_at: Date.new(2025, 1, 10)
       )

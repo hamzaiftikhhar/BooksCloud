@@ -104,7 +104,8 @@ end
   private
 
   def set_book
-    @book = Book.find(params[:id])
+    @book = Book.find_by(id: params[:id])
+    redirect_to books_path, alert: "Book not found." unless @book
   end
 
   def book_params

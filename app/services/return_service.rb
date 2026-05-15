@@ -20,7 +20,7 @@ class ReturnService
 
       Borrowing.transaction do
         @borrowing.mark_as_returned(Time.current)
-        @borrowing.book.increase_available_copy_count
+        @borrowing.book.increase_available_copy_count(count = 1)
         create_fine if overdue
         @borrowing
       end

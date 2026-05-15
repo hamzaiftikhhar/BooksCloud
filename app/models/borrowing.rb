@@ -10,7 +10,7 @@ class Borrowing < ApplicationRecord
   validates :due_date, presence: true, on: :update
   scope :active, -> { where(status: statuses[:active]) }
   scope :returned, -> { where(status: statuses[:returned]) }
-  scope :overdue, -> { active.where("return_date IS NULL AND due_date < ? OR return_date > due_date", Date.current) }
+  scope :overdue, -> { active.where("(return_date IS NULL AND due_date < ?) OR return_date > due_date", Date.current) }
   before_create :set_issue_date
   before_create :set_due_date # is this callback or validation?
 
@@ -29,7 +29,6 @@ class Borrowing < ApplicationRecord
 
     end_date = return_date&.to_date || Date.current
     due = due_date.to_date
-    binding
     return 0 if end_date <= due
 
     (end_date - due).to_i

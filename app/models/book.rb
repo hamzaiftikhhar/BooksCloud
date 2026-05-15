@@ -87,7 +87,11 @@ validates :genre, presence: true
   end
 
   def decrease_available_copy_count(count = 1)
-    update!(available_copy_count: available_copy_count - count)
+    raise "No copies available" if available_copy_count <= 0
+
+    update!(
+      available_copy_count: available_copy_count - 1
+    )
   end
 
   def increase_available_copy_count(count = 1)

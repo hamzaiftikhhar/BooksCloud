@@ -38,7 +38,7 @@ class BorrowingService
   end
 
   def update_book_inventory!
-    @book.decrease_available_copy_count!
+    @book.decrease_available_copy_count
   end
 
   # Service-level errors (BEST PRACTICE)
