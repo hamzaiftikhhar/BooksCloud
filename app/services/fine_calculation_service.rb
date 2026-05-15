@@ -12,10 +12,8 @@ class FineCalculationService
 
       actual_return_date = (@borrowing.return_date || Date.current).to_date
       due_date = @borrowing.due_date.to_date
-
       overdue_days = (actual_return_date - due_date).to_i
-
-      overdue_days * LibraryConstants::FINE_PER_DAY
+      overdue_days * LibraryConstants::FINE_RATE_PER_DAY
     end
 
     

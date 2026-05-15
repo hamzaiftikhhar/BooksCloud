@@ -9,5 +9,8 @@ class OverdueBorrowsQuery
           .where("borrowings.due_date < ?", Date.current)
           .select("DISTINCT members.*")
           .order("members.name")
+          
+          # binding.pry
+          
   end
 end

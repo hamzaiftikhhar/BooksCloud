@@ -20,16 +20,15 @@ class ReturnService
 
       Borrowing.transaction do
         @borrowing.mark_as_returned(Time.current)
-        @borrowing.book.increase_available_copy_count(1)
+        @borrowing.book.increase_available_copy_count(count = 1)
         create_fine if overdue
         @borrowing
       end
+
     end
 
     def create_fine
       fine_amount = FineCalculationService.call(borrowing: @borrowing)
-
-binding.pry
 
       return if fine_amount.zero?
 
