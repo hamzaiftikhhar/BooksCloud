@@ -15,7 +15,6 @@ RSpec.describe MonthlyBorrowingCountQuery do
       expect(result["March"]).to eq(3)
       expect(result["February"]).to eq(0)
     end
-
     it "returns all 12 months" do
       result = described_class.call(2026)
 

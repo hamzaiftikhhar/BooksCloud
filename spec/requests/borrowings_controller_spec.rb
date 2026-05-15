@@ -108,6 +108,9 @@ RSpec.describe "Borrowings", type: :request do
       patch return_book_borrowing_path(borrowing)
 
       expect(response).to redirect_to(borrowing_path(borrowing))
+
+      follow_redirect!
+
       expect(response).to have_http_status(:ok)
     end
   end
