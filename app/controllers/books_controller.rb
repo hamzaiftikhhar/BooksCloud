@@ -56,25 +56,25 @@ class BooksController < ApplicationController
     end
   end
 
-def search_authors
-  query = params[:q].to_s.strip.downcase
+  def search_authors
+    query = params[:q].to_s.strip.downcase
 
-  return render json: [] if query.blank?
+    return render json: [] if query.blank?
 
-  authors = Author.where(
-    "LOWER(first_name) LIKE :q OR LOWER(last_name) LIKE :q OR LOWER(first_name || ' ' || last_name) LIKE :q",
-    q: "%#{query}%"
-  ).limit(10)
+    authors = Author.where(
+      "LOWER(first_name) LIKE :q OR LOWER(last_name) LIKE :q OR LOWER(first_name || ' ' || last_name) LIKE :q",
+      q: "%#{query}%"
+    ).limit(10)
 
-  render json: authors.map { |a|
-    {
-      id: a.id,
-      name: a.name,
-      first_name: a.first_name,
-      last_name: a.last_name
+    render json: authors.map { |a|
+      {
+        id: a.id,
+        name: a.name,
+        first_name: a.first_name,
+        last_name: a.last_name
+      }
     }
-  }
-end
+  end
 
   def destroy
     if current_user.admin?
