@@ -82,7 +82,6 @@ RSpec.describe "Borrowings", type: :request do
         }
       }.to change(Borrowing, :count).by(1)
       expect(response).to redirect_to(borrowings_path)
-
       expect(flash[:notice]).to eq("Book has been issued.")
     end
   end

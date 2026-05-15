@@ -30,7 +30,6 @@ Rails.application.routes.draw do
   # Borrowing Management
   resources :borrowings, only: [ :index, :show, :create ] do
     member do
-      post :return_book
       patch :return_book
     end
     collection do
