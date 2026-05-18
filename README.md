@@ -199,16 +199,14 @@ rails server
 
 📌 Future Improvements
 Email / SMS notifications
-Admin analytics dashboard
-Advanced search filters
 Docker support
 Cloud deployment (AWS / Render)
-Role-based authorization
+Ai-powered Book recommendation
 
 
 👨‍💻 Author
 
-Built with 💙 by a developer focused on clean architecture and scalable backend systems.
+Built with 💙 by a hamza
 
 ⭐ Support
 
