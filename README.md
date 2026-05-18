@@ -206,7 +206,7 @@ Ai-powered Book recommendation
 
 👨‍💻 Author
 
-Built with 💙 by a hamza
+Built with 💙 by Hamza
 
 ⭐ Support
 
